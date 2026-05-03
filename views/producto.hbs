@@ -1,0 +1,66 @@
+<section class="page-hero page-hero-small">
+  <div class="container">
+    <h1>{{product.name}}</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="product-detail">
+      <div class="product-detail-image">
+        {{#if product.image}}
+        <img src="/uploads/{{product.image}}" alt="{{product.name}}">
+        {{else}}
+        <div class="product-emoji-large">{{product.emoji}}</div>
+        {{/if}}
+      </div>
+      <div class="product-detail-info">
+        {{#if product.badge}}<span class="product-badge">{{product.badge}}</span>{{/if}}
+        <span class="product-pet">{{#if (eq product.pet 'perro')}}Para perro{{else if (eq product.pet 'gato')}}Para gato{{else}}Para perros y gatos{{/if}}</span>
+        <h1>{{product.name}}</h1>
+        <p class="product-detail-desc">{{product.description}}</p>
+        <div class="product-detail-price">
+          <span class="price">${{product.price}}</span>
+          <span class="currency">MXN</span>
+        </div>
+        <div class="product-detail-stock">
+          {{#if product.stock}}
+          <span class="stock-available">En stock ({{product.stock}} disponibles)</span>
+          {{else}}
+          <span class="stock-out">Sin stock</span>
+          {{/if}}
+        </div>
+        <button class="btn-add-cart" onclick="addToCart({{product.id}}, '{{product.name}}', {{product.price}}, '{{product.emoji}}')">
+          + Agregar al carrito
+        </button>
+        <a href="/tienda" class="btn-outline">Volver a la tienda</a>
+      </div>
+    </div>
+
+    {{#if related.length}}
+    <div class="related-products">
+      <h2>Productos relacionados</h2>
+      <div class="products-grid">
+        {{#each related}}
+        <a href="/producto/{{id}}" class="product-card">
+          {{#if badge}}<span class="product-badge">{{badge}}</span>{{/if}}
+          <div class="product-image">
+            {{#if image}}
+            <img src="/uploads/{{image}}" alt="{{name}}">
+            {{else}}
+            <div class="product-emoji">{{emoji}}</div>
+            {{/if}}
+          </div>
+          <div class="product-info">
+            <h3>{{name}}</h3>
+            <div class="product-footer">
+              <span class="product-price">${{price}} <small>MXN</small></span>
+            </div>
+          </div>
+        </a>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+  </div>
+</section>

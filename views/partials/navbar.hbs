@@ -1,6 +1,5 @@
 <nav class="navbar">
   <a href="/" class="nav-brand">
-    <span class="brand-paw">🐾</span>
     <span class="brand-text">Lupi<span>Pet</span></span>
   </a>
   <ul class="nav-links">
@@ -10,7 +9,11 @@
     <li><a href="/contacto" class="{{#if (eq page 'contacto')}}active{{/if}}">Contacto</a></li>
   </ul>
   <button class="cart-btn" onclick="openCart()">
-    <span class="cart-icon">🛒</span>
+    <svg class="cart-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"/>
+      <circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
     <span class="cart-badge" id="cartBadge">0</span>
   </button>
   <button class="nav-toggle" onclick="toggleMobileMenu()">

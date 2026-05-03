@@ -1,6 +1,6 @@
 <section class="page-hero page-hero-small">
   <div class="container">
-    <h1>🛍️ Tienda</h1>
+    <h1>Tienda</h1>
     <p>{{total}} productos disponibles para tu mascota</p>
   </div>
 </section>
@@ -14,24 +14,24 @@
         <h3>Filtros</h3>
         <form action="/tienda" method="GET">
           <div class="filter-group">
-            <label>🔍 Buscar</label>
+            <label>Buscar</label>
             <input type="text" name="q" value="{{q}}" placeholder="Buscar producto..." class="filter-input">
           </div>
           <div class="filter-group">
-            <label>Categoría</label>
+            <label>Categoria</label>
             <div class="filter-options">
               <label class="filter-opt"><input type="radio" name="categoria" value="" {{#unless categoria}}checked{{/unless}}> Todas</label>
-              <label class="filter-opt"><input type="radio" name="categoria" value="alimentos" {{#if (eq categoria 'alimentos')}}checked{{/if}}> 🥩 Alimentos</label>
-              <label class="filter-opt"><input type="radio" name="categoria" value="accesorios" {{#if (eq categoria 'accesorios')}}checked{{/if}}> 🎾 Accesorios</label>
-              <label class="filter-opt"><input type="radio" name="categoria" value="higiene" {{#if (eq categoria 'higiene')}}checked{{/if}}> 🛁 Higiene</label>
+              {{#each categories}}
+              <label class="filter-opt"><input type="radio" name="categoria" value="{{slug}}" {{#if (eq ../categoria slug)}}checked{{/if}}> {{name}}</label>
+              {{/each}}
             </div>
           </div>
           <div class="filter-group">
             <label>Mascota</label>
             <div class="filter-options">
               <label class="filter-opt"><input type="radio" name="mascota" value="" {{#unless mascota}}checked{{/unless}}> Todas</label>
-              <label class="filter-opt"><input type="radio" name="mascota" value="perro" {{#if (eq mascota 'perro')}}checked{{/if}}> 🐶 Perros</label>
-              <label class="filter-opt"><input type="radio" name="mascota" value="gato" {{#if (eq mascota 'gato')}}checked{{/if}}> 🐱 Gatos</label>
+              <label class="filter-opt"><input type="radio" name="mascota" value="perro" {{#if (eq mascota 'perro')}}checked{{/if}}> Perros</label>
+              <label class="filter-opt"><input type="radio" name="mascota" value="gato" {{#if (eq mascota 'gato')}}checked{{/if}}> Gatos</label>
             </div>
           </div>
           <button type="submit" class="btn-filter">Aplicar filtros</button>
@@ -44,28 +44,33 @@
         {{#if products.length}}
         <div class="products-grid">
           {{#each products}}
-          <div class="product-card" data-id="{{id}}">
+          <a href="/producto/{{id}}" class="product-card">
             {{#if badge}}<span class="product-badge">{{badge}}</span>{{/if}}
-            <div class="product-emoji">{{emoji}}</div>
+            <div class="product-image">
+              {{#if image}}
+              <img src="/uploads/{{image}}" alt="{{name}}">
+              {{else}}
+              <div class="product-emoji">{{emoji}}</div>
+              {{/if}}
+            </div>
             <div class="product-info">
-              <span class="product-pet">{{#if (eq pet 'perro')}}🐶 Perro{{else}}🐱 Gato{{/if}}</span>
+              <span class="product-pet">{{#if (eq pet 'perro')}}Perro{{else}}Gato{{/if}}</span>
               <h3>{{name}}</h3>
               <p>{{description}}</p>
               <div class="product-footer">
                 <span class="product-price">${{price}} <small>MXN</small></span>
-                <button class="btn-add-cart" onclick="addToCart({{id}}, '{{name}}', {{price}}, '{{emoji}}')">
+                <button class="btn-add-cart" onclick="addToCart({{id}}, '{{name}}', {{price}}); event.preventDefault(); event.stopPropagation();">
                   + Agregar
                 </button>
               </div>
             </div>
-          </div>
+          </a>
           {{/each}}
         </div>
         {{else}}
         <div class="empty-state">
-          <span>🔍</span>
           <h3>Sin resultados</h3>
-          <p>No encontramos productos con esos filtros. Intenta con otra búsqueda.</p>
+          <p>No encontramos productos con esos filtros. Intenta con otra busqueda.</p>
           <a href="/tienda" class="btn-primary">Ver todos los productos</a>
         </div>
         {{/if}}

@@ -1,34 +1,61 @@
 const express = require('express');
 const router = express.Router();
-const { products, blogPosts } = require('../data/products');
 
-// HOME
+function execToObjects(db, query) {
+  const result = db.exec(query);
+  if (result.length === 0) return [];
+  return result[0].values.map(row => {
+    const obj = {};
+    result[0].columns.forEach((col, i) => obj[col] = row[i]);
+    return obj;
+  });
+}
+
 router.get('/', (req, res) => {
-  const featured = products.filter(p => p.badge).slice(0, 4);
+  const db = req.db.getDb();
+  const products = execToObjects(db, `
+    SELECT p.*, c.name as category_name, c.emoji as category_emoji
+    FROM products p
+    JOIN categories c ON p.category_id = c.id
+    WHERE p.featured = 1
+  `);
+  const blogPosts = execToObjects(db, 'SELECT * FROM blog_posts ORDER BY id DESC');
+
   res.render('home', {
     title: 'Lupi Pet — Amor en cada patita',
-    featured,
+    products,
     blogPosts,
     page: 'home'
   });
 });
 
-// TIENDA
 router.get('/tienda', (req, res) => {
   const { categoria, mascota, q } = req.query;
-  let filtered = [...products];
+  const db = req.db.getDb();
 
-  if (categoria) filtered = filtered.filter(p => p.category === categoria);
-  if (mascota) filtered = filtered.filter(p => p.pet === mascota || p.pet === 'ambos');
-  if (q) filtered = filtered.filter(p =>
-    p.name.toLowerCase().includes(q.toLowerCase()) ||
-    p.description.toLowerCase().includes(q.toLowerCase())
-  );
+  let products;
+  if (categoria || mascota || q) {
+    let query = `
+      SELECT p.*, c.name as category_name, c.emoji as category_emoji
+      FROM products p
+      JOIN categories c ON p.category_id = c.id
+      WHERE 1=1
+    `;
+    if (categoria) query += ` AND c.slug = '${categoria}'`;
+    if (mascota) query += ` AND (p.pet = '${mascota}' OR p.pet = 'ambos')`;
+    if (q) query += ` AND (p.name LIKE '%${q}%' OR p.description LIKE '%${q}%')`;
+    products = execToObjects(db, query);
+  } else {
+    products = execToObjects(db, 'SELECT p.*, c.name as category_name, c.emoji as category_emoji FROM products p JOIN categories c ON p.category_id = c.id');
+  }
+
+  const categories = execToObjects(db, 'SELECT * FROM categories');
 
   res.render('tienda', {
     title: 'Tienda — Lupi Pet',
-    products: filtered,
-    total: filtered.length,
+    products,
+    categories,
+    total: products.length,
     categoria,
     mascota,
     q,
@@ -36,8 +63,26 @@ router.get('/tienda', (req, res) => {
   });
 });
 
-// BLOG
+router.get('/producto/:id', (req, res) => {
+  const db = req.db.getDb();
+  const products = execToObjects(db, `SELECT p.*, c.name as category_name, c.emoji as category_emoji FROM products p JOIN categories c ON p.category_id = c.id WHERE p.id = ${parseInt(req.params.id)}`);
+  if (products.length === 0) {
+    return res.redirect('/tienda');
+  }
+  const product = products[0];
+  const related = execToObjects(db, `SELECT p.* FROM products p WHERE p.category_id = ${product.category_id} AND p.id != ${product.id} LIMIT 4`);
+  
+  res.render('producto', {
+    title: `${product.name} — Lupi Pet`,
+    product,
+    related,
+    page: 'tienda'
+  });
+});
+
 router.get('/blog', (req, res) => {
+  const db = req.db.getDb();
+  const blogPosts = execToObjects(db, 'SELECT * FROM blog_posts ORDER BY id DESC');
   res.render('blog', {
     title: 'Blog — Lupi Pet',
     blogPosts,
@@ -45,7 +90,6 @@ router.get('/blog', (req, res) => {
   });
 });
 
-// CONTACTO
 router.get('/contacto', (req, res) => {
   res.render('contacto', {
     title: 'Contacto — Lupi Pet',

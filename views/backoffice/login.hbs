@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Baloo 2', cursive; background: #FDF6F0; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-box { background: #fff; padding: 40px; border-radius: 18px; border: 2px solid #EDD9CA; width: 100%; max-width: 340px; }
+    .login-box h1 { text-align: center; margin-bottom: 24px; color: #2D1A0E; }
+    .login-box input { width: 100%; padding: 14px 16px; border: 2px solid #EDD9CA; border-radius: 10px; font-family: 'Baloo 2', cursive; font-size: 1rem; margin-bottom: 14px; background: #F5EDE6; }
+    .login-box input:focus { border-color: #EE5804; outline: none; background: #fff; }
+    .login-box button { width: 100%; background: #EE5804; color: #fff; padding: 14px; border: none; border-radius: 50px; font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 1rem; cursor: pointer; }
+    .login-box button:hover { background: #C44500; }
+    .error { color: #dc2626; font-size: 0.9rem; margin-bottom: 14px; text-align: center; }
+    .login-hint { text-align: center; color: #A0714F; font-size: 0.85rem; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h1>🐾 Backoffice</h1>
+    {{#if error}}
+    <p class="error">{{error}}</p>
+    {{/if}}
+    <form action="/backoffice/login" method="POST">
+      <input type="text" name="username" placeholder="Usuario" required autocomplete="username">
+      <input type="password" name="password" placeholder="Contrasena" required autocomplete="current-password">
+      <button type="submit">Ingresar</button>
+    </form>
+    <p class="login-hint">Usuario: admin | Contrasena: lupi2025</p>
+  </div>
+</body>
+</html>

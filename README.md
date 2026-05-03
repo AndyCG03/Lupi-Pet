@@ -1,110 +1,67 @@
-# 🐾 Lupi Pet — Tienda de Mascotas
+# LUPI PET — Tienda de Mascotas
 
-Ecommerce para tienda de mascotas con Node.js + Express + Handlebars.
+Ecommerce para tienda de mascotas con Node.js + Express + Handlebars + SQLite (sql.js).
 Carrito de compras con redirección a WhatsApp.
 
-## 📁 Estructura del proyecto
+## Estructura
 
 ```
 lupi-pet/
 ├── server.js              # Entrada principal
 ├── package.json
-├── data/
-│   └── products.js        # Productos y blog posts
+├── db/
+│   ├── database.js       # Base de datos SQLite
+│   └── lupi.db         # Archivo de BD (se crea automaticamente)
+├── uploads/             # Imagenes de productos
 ├── routes/
-│   ├── index.js           # Rutas de páginas
-│   └── api.js             # API REST (carrito, checkout)
+│   ├── index.js         # Rutas de paginas
+│   ├── api.js         # API REST (carrito, checkout)
+│   └── backoffice.js  # Admin
 ├── views/
-│   ├── layouts/
-│   │   └── main.hbs       # Layout principal
-│   ├── partials/
-│   │   ├── navbar.hbs
-│   │   └── footer.hbs
-│   ├── home.hbs
-│   ├── tienda.hbs
-│   ├── blog.hbs
-│   └── contacto.hbs
+│   └── backoffice/    # Plantillas admin
 └── public/
-    ├── css/
-    │   └── main.css
-    └── js/
-        ├── cart.js        # Lógica del carrito
-        └── main.js        # Helpers generales
+    ├── css/main.css
+    └── js/cart.js
 ```
 
-## 🚀 Cómo ejecutar
+## Ejecucion
 
-### 1. Instalar dependencias
 ```bash
 npm install
+npm run dev      # Desarrollo (http://localhost:3000)
+npm start       # Produccion
 ```
 
-### 2. Configurar tu número de WhatsApp
+## Configuracion
 
-Edita **`routes/api.js`** en la línea:
-```js
-const WA_NUMBER = '5215512345678';
-```
-Cambia el número por el tuyo. Formato: `521` + 10 dígitos (México).
+ **WhatsApp**: Edita `routes/api.js` linea 18
+ Formato: `521` + 10 digitos (Mexico)
 
-### 3. Iniciar el servidor
+ **Backoffice**: `/backoffice`
+ Password: `lupi2025`
 
-**Producción:**
-```bash
-npm start
-```
+## Base de Datos
 
-**Desarrollo (con auto-reload):**
-```bash
-npm run dev
-```
+- SQLite en `db/lupi.db` (sql.js)
+- Tablas: `products`, `categories`, `blog_posts`
+- Sin datos iniciales - agregar desde backoffice
 
-### 4. Abrir en el navegador
-```
-http://localhost:3000
-```
+## Agregar Productos
 
-## 🛠️ Personalización
+1. Ir a `/backoffice`
+2. Login con contrasena: `lupi2025`
+3. Productos > Nuevo Producto
+4. Llenar formulario
+5. Guardar
 
-### Agregar productos
-Edita `data/products.js` y agrega objetos al array `products`:
-```js
-{
-  id: 13,
-  name: "Nombre del producto",
-  category: "alimentos" | "accesorios" | "higiene",
-  pet: "perro" | "gato" | "ambos",
-  price: 199,
-  emoji: "🎁",
-  badge: "Nuevo" | null,
-  description: "Descripción del producto",
-  stock: 20
-}
-```
+## Paginas
 
-### Cambiar colores
-Edita las variables CSS en `public/css/main.css`:
-```css
-:root {
-  --orange: #EE5804;   /* Color principal */
-  ...
-}
-```
-
-## 📦 Dependencias
-- `express` — Servidor web
-- `express-handlebars` — Motor de plantillas
-
-## 🌐 Páginas incluidas
-| Ruta | Descripción |
-|------|-------------|
-| `/` | Inicio con hero, categorías, productos destacados y blog |
-| `/tienda` | Catálogo completo con filtros por categoría y mascota |
-| `/blog` | Artículos informativos |
-| `/contacto` | Formulario de contacto vía WhatsApp |
-
-## 🛒 Funcionamiento del carrito
-1. El usuario agrega productos desde cualquier página
-2. El carrito se guarda en `localStorage`
-3. Al hacer clic en "Pedir por WhatsApp", se genera un mensaje formateado con el pedido
-4. Se redirige a WhatsApp con el mensaje prellenado
+| Ruta | Descripcion |
+|-----|------------|
+| `/` | Inicio |
+| `/tienda` | Catalogo |
+| `/producto/:id` | Detalle producto |
+| `/blog` | Blog |
+| `/contacto` | Contacto |
+| `/backoffice` | Admin |
+| `/api/checkout` | WhatsApp checkout |

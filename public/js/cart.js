@@ -1,6 +1,4 @@
-// ════════════════════════════════════
-//  LUPI PET — Cart Manager
-// ════════════════════════════════════
+// LUPI PET -- Cart Manager
 
 let cart = JSON.parse(localStorage.getItem('lupipet_cart') || '[]');
 
@@ -8,21 +6,20 @@ function saveCart() {
   localStorage.setItem('lupipet_cart', JSON.stringify(cart));
 }
 
-function addToCart(id, name, price, emoji) {
+function addToCart(id, name, price) {
   const existing = cart.find(i => i.id === id);
   if (existing) {
     existing.qty++;
   } else {
-    cart.push({ id, name, price, emoji, qty: 1 });
+    cart.push({ id, name, price, qty: 1 });
   }
   saveCart();
   renderCart();
   updateBadge();
-  showToast(`${emoji} ${name} agregado al carrito`);
-  // animate badge
+  showToast(`${name} agregado al carrito`);
   const badge = document.getElementById('cartBadge');
   badge.classList.remove('cart-added');
-  void badge.offsetWidth; // reflow
+  void badge.offsetWidth;
   badge.classList.add('cart-added');
   setTimeout(() => badge.classList.remove('cart-added'), 300);
 }
@@ -60,9 +57,8 @@ function renderCart() {
   if (cart.length === 0) {
     container.innerHTML = `
       <div class="cart-empty">
-        <span class="cart-empty-icon">🐾</span>
-        <p>Tu carrito está vacío</p>
-        <small>¡Agrega productos para tu mascota!</small>
+        <p>Tu carrito esta vacio</p>
+        <small>Agrega productos para tu mascota</small>
       </div>`;
     footer.style.display = 'none';
     return;
@@ -76,16 +72,15 @@ function renderCart() {
     total += subtotal;
     html += `
       <div class="cart-item">
-        <span class="cart-item-emoji">${item.emoji}</span>
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
-          <div class="cart-item-price">$${subtotal.toFixed(2)} MXN</div>
+          <div class="cart-item-price">$${subtotal.toFixed(2)}</div>
         </div>
         <div class="cart-item-controls">
-          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
           <span class="qty-num">${item.qty}</span>
           <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
-          <button class="cart-item-del" onclick="removeFromCart(${item.id})" title="Eliminar">🗑</button>
+          <button class="cart-item-del" onclick="removeFromCart(${item.id})" title="Eliminar">X</button>
         </div>
       </div>`;
   });
@@ -123,11 +118,10 @@ async function checkoutWhatsApp() {
     }
   } catch (err) {
     console.error('Checkout error:', err);
-    showToast('❌ Error al procesar el pedido. Intenta de nuevo.');
+    showToast('Error al procesar el pedido. Intenta de nuevo.');
   }
 }
 
-// ── Toast ──
 function showToast(msg) {
   let toast = document.getElementById('lupipet-toast');
   if (!toast) {
@@ -142,7 +136,6 @@ function showToast(msg) {
   toast._timer = setTimeout(() => toast.classList.remove('show'), 2800);
 }
 
-// Init
 document.addEventListener('DOMContentLoaded', () => {
   renderCart();
   updateBadge();
