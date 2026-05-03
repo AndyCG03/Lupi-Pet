@@ -1,0 +1,44 @@
+<section class="page-hero page-hero-small">
+  <div class="container">
+    <h1>📝 Blog</h1>
+    <p>Consejos, cuidados y todo sobre el mundo de las mascotas</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="blog-grid blog-grid-full">
+      {{#each blogPosts}}
+      <article class="blog-card blog-card-full">
+        <div class="blog-emoji-lg">{{emoji}}</div>
+        <div class="blog-content">
+          <div class="blog-meta">
+            <span class="blog-category">{{category}}</span>
+            <span class="blog-date">📅 {{date}}</span>
+            <span class="blog-read-time">⏱ {{readTime}} de lectura</span>
+          </div>
+          <h2>{{title}}</h2>
+          <p>{{excerpt}}</p>
+          <button class="btn-blog-read" onclick="alert('¡Próximamente! Artículo completo en desarrollo.')">
+            Leer artículo completo →
+          </button>
+        </div>
+      </article>
+      {{/each}}
+    </div>
+
+    <div class="blog-newsletter">
+      <div class="newsletter-inner">
+        <span>📬</span>
+        <div>
+          <h3>Suscríbete a nuestro newsletter</h3>
+          <p>Recibe consejos, ofertas y novedades directamente en tu correo.</p>
+        </div>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Tu correo electrónico" class="newsletter-input">
+          <button class="btn-primary" onclick="alert('¡Gracias! Te avisaremos pronto 🐾')">Suscribirme</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

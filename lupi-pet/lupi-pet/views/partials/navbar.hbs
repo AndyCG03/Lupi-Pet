@@ -1,0 +1,20 @@
+<nav class="navbar">
+  <a href="/" class="nav-brand">
+    <span class="brand-paw">🐾</span>
+    <span class="brand-text">Lupi<span>Pet</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/" class="{{#if (eq page 'home')}}active{{/if}}">Inicio</a></li>
+    <li><a href="/tienda" class="{{#if (eq page 'tienda')}}active{{/if}}">Tienda</a></li>
+    <li><a href="/blog" class="{{#if (eq page 'blog')}}active{{/if}}">Blog</a></li>
+    <li><a href="/contacto" class="{{#if (eq page 'contacto')}}active{{/if}}">Contacto</a></li>
+  </ul>
+  <button class="cart-btn" onclick="openCart()">
+    <span class="cart-icon">🛒</span>
+    <span class="cart-badge" id="cartBadge">0</span>
+  </button>
+  <button class="nav-toggle" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-spacer"></div>
