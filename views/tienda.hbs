@@ -30,14 +30,34 @@
             <label>Mascota</label>
             <div class="filter-options">
               <label class="filter-opt"><input type="radio" name="mascota" value="" {{#unless mascota}}checked{{/unless}}> Todas</label>
-              <label class="filter-opt"><input type="radio" name="mascota" value="perro" {{#if (eq mascota 'perro')}}checked{{/if}}> Perros</label>
-              <label class="filter-opt"><input type="radio" name="mascota" value="gato" {{#if (eq mascota 'gato')}}checked{{/if}}> Gatos</label>
+              {{#each pets}}
+              <label class="filter-opt"><input type="radio" name="mascota" value="{{slug}}" {{#if (eq ../mascota slug)}}checked{{/if}}> {{name}}</label>
+              {{/each}}
             </div>
           </div>
           <button type="submit" class="btn-filter">Aplicar filtros</button>
           <a href="/tienda" class="btn-clear">Limpiar</a>
         </form>
       </aside>
+
+      <!-- Filtros mobile -->
+      <div class="filters-mobile">
+        <form action="/tienda" method="GET">
+          <select name="categoria" class="filter-select" onchange="this.form.submit()">
+            <option value="">Todas las categorias</option>
+            {{#each categories}}
+            <option value="{{slug}}" {{#if (eq ../categoria slug)}}selected{{/if}}>{{name}}</option>
+            {{/each}}
+          </select>
+          <select name="mascota" class="filter-select" onchange="this.form.submit()">
+            <option value="">Todas las mascotas</option>
+            {{#each pets}}
+            <option value="{{slug}}" {{#if (eq ../mascota slug)}}selected{{/if}}>{{name}}</option>
+            {{/each}}
+          </select>
+          {{#if q}}<input type="hidden" name="q" value="{{q}}">{{/if}}
+        </form>
+      </div>
 
       <!-- Grid productos -->
       <div class="shop-main">
@@ -54,7 +74,7 @@
               {{/if}}
             </div>
             <div class="product-info">
-              <span class="product-pet">{{#if (eq pet 'perro')}}Perro{{else}}Gato{{/if}}</span>
+              <span class="product-pet">{{#eq pet 'ambos'}}Ambos{{else}}{{pet}}{{/eq}}</span>
               <h3>{{name}}</h3>
               <p>{{description}}</p>
               <div class="product-footer">
@@ -69,8 +89,7 @@
         </div>
         {{else}}
         <div class="empty-state">
-          <h3>Sin resultados</h3>
-          <p>No encontramos productos con esos filtros. Intenta con otra busqueda.</p>
+          <p>No se encontraron productos con esos filtros.</p>
           <a href="/tienda" class="btn-primary">Ver todos los productos</a>
         </div>
         {{/if}}

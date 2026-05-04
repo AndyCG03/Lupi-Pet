@@ -50,11 +50,13 @@ router.get('/tienda', (req, res) => {
   }
 
   const categories = execToObjects(db, 'SELECT * FROM categories');
+  const pets = execToObjects(db, 'SELECT * FROM pets');
 
   res.render('tienda', {
     title: 'Tienda — Lupi Pet',
     products,
     categories,
+    pets,
     total: products.length,
     categoria,
     mascota,

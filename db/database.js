@@ -19,12 +19,11 @@ async function loadDb() {
   
   db = new SQL.Database(data);
   
-  db.run(`
-    CREATE TABLE IF NOT EXISTS categories (
+db.run(`
+    CREATE TABLE IF NOT EXISTS pets (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       slug TEXT UNIQUE NOT NULL,
-      pet TEXT DEFAULT 'ambos',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
@@ -66,6 +65,15 @@ async function loadDb() {
   try { db.run("ALTER TABLE blog_posts ADD COLUMN image TEXT"); } catch(e) {}
   
   db.run(`
+    CREATE TABLE IF NOT EXISTS pets (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      slug TEXT UNIQUE NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  
+  db.run(`
     CREATE TABLE IF NOT EXISTS admin_user (
       id INTEGER PRIMARY KEY,
       username TEXT NOT NULL,
@@ -83,13 +91,24 @@ async function loadDb() {
     db.run("INSERT INTO categories (name, slug, pet) VALUES ('Higiene', 'higiene', 'ambos')");
   }
   
+  const petResult = db.exec('SELECT COUNT(*) as count FROM pets');
+  const petCount = petResult.length > 0 ? petResult[0].values[0][0] : 0;
+  
+  if (petCount === 0) {
+    db.run("INSERT INTO pets (name, slug) VALUES ('Perro', 'perro')");
+    db.run("INSERT INTO pets (name, slug) VALUES ('Gato', 'gato')");
+    db.run("INSERT INTO pets (name, slug) VALUES ('Ave', 'ave')");
+    db.run("INSERT INTO pets (name, slug) VALUES ('Pez', 'pez')");
+    db.run("INSERT INTO pets (name, slug) VALUES ('Otro', 'otro')");
+  }
+  
   const adminResult = db.exec('SELECT COUNT(*) as count FROM admin_user');
   const adminCount = adminResult.length > 0 ? adminResult[0].values[0][0] : 0;
   
   if (adminCount === 0) {
     db.run("INSERT INTO admin_user (username, password_hash) VALUES ('" + ADMIN_USER + "', '" + DEFAULT_PASSWORD_HASH + "')");
-    saveDb();
   }
+  saveDb();
 }
 
 function runQuery(query, params = []) {

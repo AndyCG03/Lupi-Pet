@@ -56,9 +56,10 @@
     <aside class="bo-sidebar">
       <h2>Backoffice</h2>
       <a href="/backoffice/products" {{#eq page 'products'}}class="active"{{/eq}}>Productos</a>
-      <a href="/backoffice/categories" {{#eq page 'categories'}}class="active"{{/eq}}>Categorias</a>
+      <a href="/backoffice/categories" {{#eq page 'categories'}}class="active"{{/eq}}>Categorías</a>
+      <a href="/backoffice/pets" {{#eq page 'pets'}}class="active"{{/eq}}>Mascotas</a>
       <a href="/backoffice/blog" {{#eq page 'blog'}}class="active"{{/eq}}>Blog</a>
-      <a href="/backoffice/password" {{#eq page 'password'}}class="active"{{/eq}}>Password</a>
+      <a href="/backoffice/password" {{#eq page 'password'}}class="active"{{/eq}}>Contraseña</a>
       <a href="/backoffice/logout" onclick="return confirm('Cerrar sesion?')">Salir</a>
     </aside>
     <main class="bo-main">
@@ -85,8 +86,8 @@
             <td>{{name}}</td>
             <td>{{category_name}}</td>
             <td>${{price}}</td>
-            <td>{{stock}}</td>
-            <td>{{#eq pet 'perro'}}Perro{{else}}{{#eq pet 'gato'}}Gato{{else}}Ambos{{/eq}}{{/eq}}</td>
+            <td>{{#if stock}}{{stock}}{{else}}Sin limite{{/if}}</td>
+            <td>{{#eq pet 'ambos'}}Ambos{{else}}{{pet}}{{/eq}}</td>
             <td>
               <div class="bo-actions">
                 <a href="/backoffice/products/{{id}}/edit" class="bo-action-btn edit">Editar</a>
@@ -98,7 +99,7 @@
           </tr>
           {{else}}
           <tr>
-            <td colspan="7" style="text-align:center;padding:40px;">No hay productos. Agrega uno nuevo.</td>
+            <td colspan="7" style="text-align:center;padding:40px;">No hay productos</td>
           </tr>
           {{/each}}
         </tbody>
@@ -128,8 +129,9 @@
             <label>Para</label>
             <select name="pet" required>
               <option value="ambos">Ambos</option>
-              <option value="perro">Perro</option>
-              <option value="gato">Gato</option>
+              {{#each pets}}
+              <option value="{{slug}}">{{name}}</option>
+              {{/each}}
             </select>
           </div>
         </div>

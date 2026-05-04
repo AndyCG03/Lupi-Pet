@@ -18,28 +18,29 @@
     .bo-main { flex: 1; margin-left: 240px; padding: 32px; background: #FDF6F0; min-height: 100vh; width: calc(100% - 240px); }
     .bo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
     .bo-header h1 { font-size: 1.8rem; font-weight: 800; margin: 0; }
-    .bo-btn { background: #EE5804; color: #fff; padding: 10px 20px; border-radius: 50px; font-weight: 700; display: inline-block; text-decoration: none; transition: all .2s; border: none; cursor: pointer; font-family: 'Baloo 2', cursive; }
+    .bo-btn { background: #EE5804; color: #fff; padding: 12px 20px; border-radius: 50px; font-weight: 700; border: none; cursor: pointer; font-family: 'Baloo 2', cursive; font-size: 1rem; }
     .bo-btn:hover { background: #C44500; }
+    .bo-btn-secondary { background: #6b7280; }
+    .bo-btn-secondary:hover { background: #4b5563; }
     .bo-toggle { display: none; background: #2D1A0E; color: #fff; padding: 12px 16px; border: none; cursor: pointer; position: fixed; top: 0; left: 0; z-index: 100; }
-    .bo-table { width: 100%; background: #fff; border-radius: 12px; overflow: hidden; border: 2px solid #EDD9CA; }
-    .bo-table th, .bo-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #EDD9CA; }
-    .bo-table th { background: #E8DFD4; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
-    .bo-table tr:hover { background: #FDF6F0; }
-    .bo-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-    .bo-action-btn { padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: none; border: none; }
-    .bo-action-btn.edit { background: #FEE4D6; color: #EE5804; }
-    .bo-action-btn.delete { background: #fee2e2; color: #dc2626; }
+    .dialog-overlay { display: flex; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); z-index: 200; align-items: center; justify-content: center; }
+    .dialog { background: #fff; border-radius: 18px; padding: 28px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; position: relative; }
+    .dialog h2 { margin: 0 0 20px 0; font-size: 1.5rem; }
+    .dialog-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; float: right; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-weight: 700; margin-bottom: 6px; }
+    .form-group input { width: 100%; padding: 10px 12px; border: 2px solid #EDD9CA; border-radius: 8px; font-family: 'Baloo 2', cursive; font-size: 1rem; }
+    .form-group input:focus { border-color: #EE5804; outline: none; }
     @media (max-width: 767px) {
       .bo-sidebar { display: none; }
       .bo-sidebar.show { display: block; }
       .bo-main { margin-left: 0; padding: 20px 16px; width: 100%; }
       .bo-toggle { display: block; }
-      .bo-table { display: block; overflow-x: auto; }
     }
   </style>
 </head>
 <body>
-  <button class="bo-toggle" onclick="document.querySelector('.bo-sidebar').classList.toggle('show')">☰ Menu</button>
+  <button class="bo-toggle" onclick="document.querySelector('.bo-sidebar').classList.toggle('show')">☰ Menú</button>
   <div class="bo-layout">
     <aside class="bo-sidebar">
       <h2>Backoffice</h2>
@@ -48,42 +49,26 @@
       <a href="/backoffice/pets" {{#eq page 'pets'}}class="active"{{/eq}}>Mascotas</a>
       <a href="/backoffice/blog" {{#eq page 'blog'}}class="active"{{/eq}}>Blog</a>
       <a href="/backoffice/password" {{#eq page 'password'}}class="active"{{/eq}}>Contraseña</a>
-      <a href="/backoffice/logout" onclick="return confirm('Cerrar sesion?')">Salir</a>
+      <a href="/backoffice/logout" onclick="return confirm('Cerrar sesión?')">Salir</a>
     </aside>
     <main class="bo-main">
-      <div class="bo-header">
-        <h1>Categorias</h1>
-        <a href="/backoffice/categories/new" class="bo-btn">+ Nueva Categoria</a>
+      <div class="dialog-overlay">
+        <div class="dialog">
+          <h2>Editar Mascota</h2>
+          <form action="/backoffice/pets/{{pet.id}}" method="POST">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" name="name" value="{{pet.name}}" required>
+            </div>
+            <div class="form-group">
+              <label>Slug (URL)</label>
+              <input type="text" name="slug" value="{{pet.slug}}" required>
+            </div>
+            <button type="submit" class="bo-btn">Guardar</button>
+            <a href="/backoffice/pets" class="bo-btn bo-btn-secondary" style="margin-left:10px;display:inline-block;text-decoration:none;">Cancelar</a>
+          </form>
+        </div>
       </div>
-      <table class="bo-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Slug</th>
-            <th>Para</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each categories}}
-          <tr>
-            <td>{{id}}</td>
-            <td>{{name}}</td>
-            <td>{{slug}}</td>
-            <td>{{#eq pet 'perro'}}Perro{{else}}{{#eq pet 'gato'}}Gato{{else}}Ambos{{/eq}}{{/eq}}</td>
-            <td>
-              <div class="bo-actions">
-                <a href="/backoffice/categories/{{id}}/edit" class="bo-action-btn edit">Editar</a>
-                <form action="/backoffice/categories/{{id}}/delete" method="POST" style="display:inline">
-                  <button type="submit" class="bo-action-btn delete" onclick="return confirm('Eliminar?')">X</button>
-                </form>
-              </div>
-            </td>
-          </tr>
-          {{/each}}
-        </tbody>
-      </table>
     </main>
   </div>
 </body>

@@ -16,7 +16,7 @@
       </div>
       <div class="product-detail-info">
         {{#if product.badge}}<span class="product-badge">{{product.badge}}</span>{{/if}}
-        <span class="product-pet">{{#if (eq product.pet 'perro')}}Para perro{{else if (eq product.pet 'gato')}}Para gato{{else}}Para perros y gatos{{/if}}</span>
+        <span class="product-pet">{{#eq product.pet 'ambos'}}Para todos{{else}}Para {{product.pet}}{{/eq}}</span>
         <h1>{{product.name}}</h1>
         <p class="product-detail-desc">{{product.description}}</p>
         <div class="product-detail-price">
@@ -25,9 +25,9 @@
         </div>
         <div class="product-detail-stock">
           {{#if product.stock}}
-          <span class="stock-available">En stock ({{product.stock}} disponibles)</span>
+          <span class="stock-available">En stock ({{product.stock}})</span>
           {{else}}
-          <span class="stock-out">Sin stock</span>
+          <span class="stock-available">Disponible</span>
           {{/if}}
         </div>
         <button class="btn-add-cart" onclick="addToCart({{product.id}}, '{{product.name}}', {{product.price}})">

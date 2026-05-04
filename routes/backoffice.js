@@ -53,11 +53,14 @@ router.get('/backoffice/products', (req, res) => {
   const db = req.db.getDb();
   const products = execToObjects(db, 'SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.id DESC');
   const categories = execToObjects(db, 'SELECT * FROM categories');
+  const pets = execToObjects(db, 'SELECT * FROM pets');
+  const allPets = execToObjects(db, 'SELECT * FROM pets');
   
   res.render('backoffice/products', {
     title: 'Productos — Backoffice',
     products,
     categories,
+    pets: allPets,
     page: 'products',
     layout: false
   });
@@ -90,7 +93,17 @@ router.get('/backoffice/products/new', (req, res) => {
   if (!req.session || !req.session.admin) {
     return res.redirect('/backoffice/login');
   }
-  res.redirect('/backoffice/products');
+  const db = req.db.getDb();
+  const categories = execToObjects(db, 'SELECT * FROM categories');
+  const pets = execToObjects(db, 'SELECT * FROM pets');
+  res.render('backoffice/product-form', {
+    title: 'Nuevo Producto — Backoffice',
+    categories,
+    pets,
+    product: {},
+    page: 'products',
+    layout: false
+  });
 });
 
 router.get('/backoffice/products/:id/edit', (req, res) => {
@@ -101,10 +114,12 @@ router.get('/backoffice/products/:id/edit', (req, res) => {
   const products = execToObjects(db, 'SELECT * FROM products WHERE id = ' + parseInt(req.params.id));
   const product = products.length > 0 ? products[0] : null;
   const categories = execToObjects(db, 'SELECT * FROM categories');
+  const pets = execToObjects(db, 'SELECT * FROM pets');
   
   res.render('backoffice/product-form', {
     title: 'Editar Producto — Backoffice',
     categories,
+    pets,
     product,
     page: 'products',
     layout: false
@@ -288,7 +303,7 @@ router.get('/backoffice/password', (req, res) => {
     return res.redirect('/backoffice/login');
   }
   res.render('backoffice/password', {
-    title: 'Cambiar Contrasena — Backoffice',
+    title: 'Cambiar Contraseña — Backoffice',
     page: 'password',
     layout: false
   });
@@ -305,8 +320,8 @@ router.post('/backoffice/password', (req, res) => {
   
   if (adminUser.password_hash !== currentHash) {
     return res.render('backoffice/password', {
-      title: 'Cambiar Contrasena — Backoffice',
-      error: 'Contrasena actual incorrecta',
+      title: 'Cambiar Contraseña — Backoffice',
+      error: 'Contraseña actual incorrecta',
       page: 'password',
       layout: false
     });
@@ -314,8 +329,8 @@ router.post('/backoffice/password', (req, res) => {
   
   if (new_password !== confirm_password) {
     return res.render('backoffice/password', {
-      title: 'Cambiar Contrasena — Backoffice',
-      error: 'Las contrasenas no coinciden',
+      title: 'Cambiar Contraseña — Backoffice',
+      error: 'Las contraseñas no coinciden',
       page: 'password',
       layout: false
     });
@@ -323,8 +338,8 @@ router.post('/backoffice/password', (req, res) => {
   
   if (new_password.length < 4) {
     return res.render('backoffice/password', {
-      title: 'Cambiar Contrasena — Backoffice',
-      error: 'La contrasena debe tener al menos 4 caracteres',
+      title: 'Cambiar Contraseña — Backoffice',
+      error: 'La contraseña debe tener al menos 4 caracteres',
       page: 'password',
       layout: false
     });
@@ -333,17 +348,73 @@ router.post('/backoffice/password', (req, res) => {
   const newHash = req.db.getPasswordHash(new_password);
   req.db.updatePassword(newHash);
   
-  res.render('backoffice/password', {
-    title: 'Cambiar Contrasena — Backoffice',
-    success: 'Contrasena actualizada correctamente',
-    page: 'password',
-    layout: false
-  });
+  req.session.destroy();
+  res.redirect('/backoffice/login');
 });
 
 router.get('/backoffice/logout', (req, res) => {
   req.session = null;
   res.redirect('/backoffice/login');
+});
+
+router.get('/backoffice/pets', (req, res) => {
+  if (!req.session || !req.session.admin) {
+    return res.redirect('/backoffice/login');
+  }
+  const db = req.db.getDb();
+  const pets = execToObjects(db, 'SELECT * FROM pets ORDER BY id');
+  res.render('backoffice/pets', {
+    title: 'Mascotas — Backoffice',
+    pets,
+    page: 'pets',
+    layout: false
+  });
+});
+
+router.post('/backoffice/pets', (req, res) => {
+  if (!req.session || !req.session.admin) {
+    return res.redirect('/backoffice/login');
+  }
+  const { name, slug } = req.body;
+  req.db.runQuery("INSERT INTO pets (name, slug) VALUES ('" + name.replace(/'/g, "''") + "', '" + slug.replace(/'/g, "''") + "')");
+  req.db.saveDb();
+  res.redirect('/backoffice/pets');
+});
+
+router.get('/backoffice/pets/:id/edit', (req, res) => {
+  if (!req.session || !req.session.admin) {
+    return res.redirect('/backoffice/login');
+  }
+  const db = req.db.getDb();
+  const pets = execToObjects(db, 'SELECT * FROM pets WHERE id = ' + parseInt(req.params.id));
+  const pet = pets.length > 0 ? pets[0] : null;
+  res.render('backoffice/pet-form', {
+    title: 'Editar Mascota — Backoffice',
+    pet,
+    page: 'pets',
+    layout: false
+  });
+});
+
+router.post('/backoffice/pets/:id', (req, res) => {
+  if (!req.session || !req.session.admin) {
+    return res.redirect('/backoffice/login');
+  }
+  const { name, slug } = req.body;
+  const id = parseInt(req.params.id);
+  req.db.runQuery("UPDATE pets SET name = '" + name.replace(/'/g, "''") + "', slug = '" + slug.replace(/'/g, "''") + "' WHERE id = " + id);
+  req.db.saveDb();
+  res.redirect('/backoffice/pets');
+});
+
+router.get('/backoffice/pets/:id/delete', (req, res) => {
+  if (!req.session || !req.session.admin) {
+    return res.redirect('/backoffice/login');
+  }
+  const id = parseInt(req.params.id);
+  req.db.runQuery('DELETE FROM pets WHERE id = ' + id);
+  req.db.saveDb();
+  res.redirect('/backoffice/pets');
 });
 
 module.exports = router;
