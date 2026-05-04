@@ -47,13 +47,31 @@ app.engine('hbs', engine({
     ifEquals: (a, b) => a === b ? 'selected' : '',
     multiply: (a, b) => (a * b).toFixed(2),
     json: (ctx) => JSON.stringify(ctx),
+    add: (a, b) => a + b,
+    sub: (a, b) => a - b,
+    gt: (a, b) => a > b,
+    lt: (a, b) => a < b,
+    petLabel: (pet, pet_name) => {
+      if (pet === 'ambos') return 'Ambos';
+      if (pet === true) return 'Perro';
+      if (pet === false) return 'Gato';
+      if (pet === 'true') return 'Perro';
+      if (pet === 'false') return 'Gato';
+      if (pet === 'perro') return 'Perro';
+      if (pet === 'gato') return 'Gato';
+      if (pet_name && typeof pet_name === 'string') return pet_name;
+      return pet === 'ambos' ? 'Ambos' : (pet || '');
+    },
     stockLabel: (stock) => {
-      if (stock === 'sin-stock' || stock === false) return 'Sin stock';
+      console.log('DEBUG stock:', stock, typeof stock);
+      if (stock === 'sin-stock') return 'Sin stock';
       if (stock === 'pocos') return 'Pocos';
+      if (stock === false || stock === 'false' || stock === 0) return 'Sin stock';
       return 'En stock';
     },
     stockClass: (stock) => {
-      if (stock === 'sin-stock' || stock === false) return 'out';
+      if (stock === 'sin-stock') return 'out';
+      if (stock === false || stock === 'false' || stock === 0) return 'out';
       return 'in';
     }
   }

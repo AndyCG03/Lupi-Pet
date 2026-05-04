@@ -10,7 +10,8 @@
       </div>
       <div class="product-detail-info">
         {{#if product.badge}}<span class="product-badge">{{product.badge}}</span>{{/if}}
-        <span class="product-pet">{{#eq product.pet 'ambos'}}Para todos{{else}}Para {{#if product.pet_name}}{{product.pet_name}}{{else}}{{product.pet}}{{/if}}{{/eq}}</span>
+        <span class="product-pet">{{petLabel product.pet product.pet_name}}</span>
+        <span class="product-category">{{product.category_name}}</span>
         <h1>{{product.name}}</h1>
         <p class="product-detail-desc">{{product.description}}</p>
         <div class="product-detail-price">

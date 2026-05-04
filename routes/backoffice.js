@@ -235,7 +235,9 @@ router.get('/backoffice/blog/new', (req, res) => {
   if (!req.session || !req.session.admin) {
     return res.redirect('/backoffice/login');
   }
-  res.render('backoffice/blog-form', { title: 'Nueva Entrada — Backoffice', post: {}, page: 'blog', layout: false });
+  const pets = execToObjects(req.db.getDb(), 'SELECT * FROM pets');
+  const categories = execToObjects(req.db.getDb(), 'SELECT * FROM categories');
+  res.render('backoffice/blog-form', { title: 'Nueva Entrada — Backoffice', post: {}, pets, categories, page: 'blog', layout: false });
 });
 
 router.post('/backoffice/blog', (req, res, next) => {
@@ -245,12 +247,13 @@ router.post('/backoffice/blog', (req, res, next) => {
   });
 }, (req, res) => {
   if (!req.session || !req.session.admin) return res.redirect('/backoffice/login');
-  const { title, category, pet, content } = req.body;
+  const { title, category, pet, content, excerpt } = req.body;
   const image = req.file ? req.file.filename : null;
+  const date = new Date().toISOString().split('T')[0];
   req.db.runQuery(
-    "INSERT INTO blog_posts (title, category, pet, content, image) VALUES ('" + 
-    title.replace(/'/g, "''") + "', '" + category + "', '" + pet + "', '" + (content || '').replace(/'/g, "''") + "', " + 
-    (image ? "'" + image.replace(/'/g, "''") + "'" : "null") + ")"
+    "INSERT INTO blog_posts (title, category, pet, excerpt, content, image, date) VALUES ('" + 
+    title.replace(/'/g, "''") + "', '" + category + "', '" + pet + "', '" + (excerpt || '').replace(/'/g, "''") + "', '" + (content || '').replace(/'/g, "''") + "', " + 
+    (image ? "'" + image.replace(/'/g, "''") + "'" : "null") + ", '" + date + "')"
   );
   req.db.saveDb();
   res.redirect('/backoffice/blog');
@@ -263,7 +266,9 @@ router.get('/backoffice/blog/:id/edit', (req, res) => {
   const db = req.db.getDb();
   const posts = execToObjects(db, 'SELECT * FROM blog_posts WHERE id = ' + parseInt(req.params.id));
   const post = posts.length > 0 ? posts[0] : null;
-  res.render('backoffice/blog-form', { title: 'Editar Entrada — Backoffice', post, page: 'blog', layout: false });
+  const pets = execToObjects(db, 'SELECT * FROM pets');
+  const categories = execToObjects(db, 'SELECT * FROM categories');
+  res.render('backoffice/blog-form', { title: 'Editar Entrada — Backoffice', post, pets, categories, page: 'blog', layout: false });
 });
 
 router.post('/backoffice/blog/:id', (req, res, next) => {
@@ -273,11 +278,11 @@ router.post('/backoffice/blog/:id', (req, res, next) => {
   });
 }, (req, res) => {
   if (!req.session || !req.session.admin) return res.redirect('/backoffice/login');
-  const { title, category, pet, content, existing_image } = req.body;
+  const { title, category, pet, content, excerpt, existing_image } = req.body;
   const image = req.file ? req.file.filename : existing_image;
   const id = parseInt(req.params.id);
   req.db.runQuery(
-    "UPDATE blog_posts SET title = '" + title.replace(/'/g, "''") + "', category = '" + category + "', pet = '" + pet + "', content = '" + 
+    "UPDATE blog_posts SET title = '" + title.replace(/'/g, "''") + "', category = '" + category + "', pet = '" + pet + "', excerpt = '" + (excerpt || '').replace(/'/g, "''") + "', content = '" + 
     (content || '').replace(/'/g, "''") + "', image = " + (image ? "'" + image.replace(/'/g, "''") + "'" : "null") + " WHERE id = " + id
   );
   req.db.saveDb();

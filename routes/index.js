@@ -31,10 +31,12 @@ router.get('/', (req, res) => {
 });
 
 router.get('/tienda', (req, res) => {
-  const { categoria, mascota, q } = req.query;
+  const { categoria, mascota, q, page } = req.query;
+  const limit = 12;
+  const offset = ((parseInt(page) || 1) - 1) * limit;
   const db = req.db.getDb();
   
-  let products;
+  let products, total;
   if (categoria || mascota || q) {
     let query = `
       SELECT p.*, c.name as category_name, m.name as pet_name
@@ -43,12 +45,30 @@ router.get('/tienda', (req, res) => {
       LEFT JOIN pets m ON p.pet = m.slug
       WHERE 1=1
     `;
-    if (categoria) query += ` AND c.slug = '${categoria}'`;
-    if (mascota) query += ` AND (p.pet = '${mascota}' OR p.pet = 'ambos')`;
-    if (q) query += ` AND (p.name LIKE '%${q}%' OR p.description LIKE '%${q}%')`;
+    let countQuery = `
+      SELECT COUNT(*) as total
+      FROM products p
+      JOIN categories c ON p.category_id = c.id
+      WHERE 1=1
+    `;
+    if (categoria) {
+      query += ` AND c.slug = '${categoria}'`;
+      countQuery += ` AND c.slug = '${categoria}'`;
+    }
+    if (mascota) {
+      query += ` AND (p.pet = '${mascota}' OR p.pet = 'ambos')`;
+      countQuery += ` AND (p.pet = '${mascota}' OR p.pet = 'ambos')`;
+    }
+    if (q) {
+      query += ` AND (p.name LIKE '%${q}%' OR p.description LIKE '%${q}%')`;
+      countQuery += ` AND (p.name LIKE '%${q}%' OR p.description LIKE '%${q}%')`;
+    }
+    query += ` LIMIT ${limit} OFFSET ${offset}`;
     products = execToObjects(db, query);
+    total = execToObjects(db, countQuery)[0]?.total || 0;
   } else {
-    products = execToObjects(db, 'SELECT p.*, c.name as category_name, m.name as pet_name FROM products p JOIN categories c ON p.category_id = c.id LEFT JOIN pets m ON p.pet = m.slug');
+    products = execToObjects(db, `SELECT p.*, c.name as category_name, m.name as pet_name FROM products p JOIN categories c ON p.category_id = c.id LEFT JOIN pets m ON p.pet = m.slug LIMIT ${limit} OFFSET ${offset}`);
+    total = execToObjects(db, 'SELECT COUNT(*) as total FROM products p JOIN categories c ON p.category_id = c.id')[0]?.total || 0;
   }
 
   const categories = execToObjects(db, 'SELECT * FROM categories');
@@ -59,7 +79,9 @@ router.get('/tienda', (req, res) => {
     products,
     categories,
     pets,
-    total: products.length,
+    total,
+    currentPage: parseInt(page) || 1,
+    totalPages: Math.ceil(total / limit),
     categoria,
     mascota,
     q,

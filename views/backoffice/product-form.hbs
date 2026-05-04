@@ -79,7 +79,6 @@
           <div class="bo-form-group">
             <label>Para</label>
             <select name="pet" required>
-              <option value="ambos" {{#eq product.pet 'ambos'}}selected{{/eq}}>Ambos</option>
               {{#each pets}}
               <option value="{{slug}}" {{#eq slug ../product.pet}}selected{{/eq}}>{{name}}</option>
               {{/each}}

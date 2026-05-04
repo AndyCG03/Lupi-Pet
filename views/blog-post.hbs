@@ -3,6 +3,7 @@
 <section class="section">
   <div class="container">
     <article class="blog-post-full">
+      <h1 class="blog-post-title">{{post.title}}</h1>
       {{#if post.image}}
       <img src="/uploads/{{post.image}}" alt="{{post.title}}" class="blog-post-image">
       {{/if}}
@@ -11,7 +12,7 @@
         <span class="blog-date">{{post.date}}</span>
         <span class="blog-read-time">{{post.read_time}} de lectura</span>
       </div>
-      <div class="blog-post-content">
+      <div class="blog-post-content blog-body">
         {{post.content}}
       </div>
       <a href="/blog" class="btn-outline" style="margin-top:24px;">Volver al blog</a>

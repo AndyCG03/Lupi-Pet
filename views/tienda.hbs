@@ -1,10 +1,15 @@
-<section class="section">
+<section class="page-header">
+  <div class="container">
+    <h1>Tienda</h1>
+    <p>{{total}} productos</p>
+  </div>
+</section>
 
 <section class="section">
   <div class="container">
     <div class="shop-layout">
 
-      <!-- Sidebar filtros -->
+      <!-- Sidebar filtros (desktop) -->
       <aside class="shop-filters">
         <h3>Filtros</h3>
         <form action="/tienda" method="GET">
@@ -69,7 +74,8 @@
               {{/if}}
             </div>
             <div class="product-info">
-              <span class="product-pet">{{#eq pet 'ambos'}}Ambos{{else}}{{#if pet_name}}{{pet_name}}{{else}}{{pet}}{{/if}}{{/eq}}</span>
+              <span class="product-pet">{{petLabel pet pet_name}}</span>
+              <span class="product-category">{{category_name}}</span>
               <span class="product-stock {{stockClass stock}}">{{stockLabel stock}}</span>
               <h3>{{name}}</h3>
               <p>{{description}}</p>
@@ -83,6 +89,19 @@
           </a>
           {{/each}}
         </div>
+
+        {{#if (gt totalPages 1)}}
+        <div class="pagination">
+          {{#if (gt currentPage 1)}}
+          <a href="/tienda?page={{sub currentPage 1}}{{#if categoria}}&categoria={{categoria}}{{/if}}{{#if mascota}}&mascota={{mascota}}{{/if}}{{#if q}}&q={{q}}{{/if}}" class="pagination-btn">Anterior</a>
+          {{/if}}
+          <span class="pagination-info">Página {{currentPage}} de {{totalPages}}</span>
+          {{#if (lt currentPage totalPages)}}
+          <a href="/tienda?page={{add currentPage 1}}{{#if categoria}}&categoria={{categoria}}{{/if}}{{#if mascota}}&mascota={{mascota}}{{/if}}{{#if q}}&q={{q}}{{/if}}" class="pagination-btn">Siguiente</a>
+          {{/if}}
+        </div>
+        {{/if}}
+
         {{else}}
         <div class="empty-state">
           <p>No se encontraron productos con esos filtros.</p>

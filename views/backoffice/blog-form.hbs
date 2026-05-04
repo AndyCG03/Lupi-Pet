@@ -58,19 +58,18 @@
           <div class="bo-form-group">
             <label>Categoria</label>
             <select name="category" required>
-              <option value="Bienestar" {{#eq post.category 'Bienestar'}}selected{{/eq}}>Bienestar</option>
-              <option value="Nutricion" {{#eq post.category 'Nutricion'}}selected{{/eq}}>Nutricion</option>
-              <option value="Salud" {{#eq post.category 'Salud'}}selected{{/eq}}>Salud</option>
-              <option value="Consejos" {{#eq post.category 'Consejos'}}selected{{/eq}}>Consejos</option>
-              <option value="Entrenamiento" {{#eq post.category 'Entrenamiento'}}selected{{/eq}}>Entrenamiento</option>
+              {{#each categories}}
+              <option value="{{name}}" {{#eq ../post.category name}}selected{{/eq}}>{{name}}</option>
+              {{/each}}
             </select>
           </div>
           <div class="bo-form-group">
             <label>Para mascotas</label>
             <select name="pet" required>
-              <option value="perro" {{#eq post.pet 'perro'}}selected{{/eq}}>Perro</option>
-              <option value="gato" {{#eq post.pet 'gato'}}selected{{/eq}}>Gato</option>
               <option value="ambos" {{#eq post.pet 'ambos'}}selected{{/eq}}>Ambos</option>
+              {{#each pets}}
+              <option value="{{slug}}" {{#eq ../post.pet slug}}selected{{/eq}}>{{name}}</option>
+              {{/each}}
             </select>
           </div>
         </div>

@@ -247,6 +247,8 @@ setInterval(() => {
 </style>
 
 
+
+
 <!-- ═══════════════════════════════════
      PROMO BANNER (condicional)
 ═══════════════════════════════════ -->
@@ -261,87 +263,6 @@ setInterval(() => {
   <button class="promo-close" onclick="this.parentElement.style.display='none'">✕</button>
 </div>
 {{/if}}
-
-
-<!-- ═══════════════════════════════════
-     CATEGORÍAS
-═══════════════════════════════════ -->
-<section class="section categories-section">
-  <div class="container">
-    <div class="section-header">
-      <div>
-        <p class="section-eyebrow">Qué buscas hoy</p>
-        <h2>Explora por categoría</h2>
-      </div>
-      <a href="/tienda" class="see-all">Ver catálogo completo →</a>
-    </div>
-
-    <div class="categories-grid">
-
-      <a href="/tienda?categoria=alimentos" class="category-card">
-        <div class="cat-icon-wrap">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EE5804" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-        </div>
-        <div class="cat-text">
-          <h3>Alimentos</h3>
-          <p>Nutrición de calidad</p>
-        </div>
-        <span class="cat-arrow">→</span>
-      </a>
-
-      <a href="/tienda?categoria=accesorios" class="category-card">
-        <div class="cat-icon-wrap">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EE5804" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
-        </div>
-        <div class="cat-text">
-          <h3>Accesorios</h3>
-          <p>Juguetes y más</p>
-        </div>
-        <span class="cat-arrow">→</span>
-      </a>
-
-      <a href="/tienda?categoria=higiene" class="category-card">
-        <div class="cat-icon-wrap">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EE5804" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 7.95 7 7c-.29.95-1.13 1.9-2.29 2.91S3 12.09 3 13.24c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0014 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 01-11.91 4.97"/></svg>
-        </div>
-        <div class="cat-text">
-          <h3>Higiene</h3>
-          <p>Cuidado y limpieza</p>
-        </div>
-        <span class="cat-arrow">→</span>
-      </a>
-
-      <a href="/tienda?mascota=perro" class="category-card">
-        <div class="cat-icon-wrap">
-          <svg width="26" height="26" viewBox="0 0 100 100">
-            <ellipse cx="50" cy="65" rx="20" ry="16" fill="#EE5804"/>
-            <ellipse cx="26" cy="50" rx="9" ry="12" fill="#EE5804"/>
-            <ellipse cx="74" cy="50" rx="9" ry="12" fill="#EE5804"/>
-            <ellipse cx="36" cy="35" rx="8" ry="10" fill="#EE5804"/>
-            <ellipse cx="64" cy="35" rx="8" ry="10" fill="#EE5804"/>
-          </svg>
-        </div>
-        <div class="cat-text">
-          <h3>Para Perros</h3>
-          <p>Todo para tu can</p>
-        </div>
-        <span class="cat-arrow">→</span>
-      </a>
-
-      <a href="/tienda?mascota=gato" class="category-card">
-        <div class="cat-icon-wrap">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EE5804" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0112 5z"/></svg>
-        </div>
-        <div class="cat-text">
-          <h3>Para Gatos</h3>
-          <p>Lo mejor para tu michi</p>
-        </div>
-        <span class="cat-arrow">→</span>
-      </a>
-
-    </div>
-  </div>
-</section>
 
 
 <!-- ═══════════════════════════════════
@@ -379,10 +300,7 @@ setInterval(() => {
         </div>
 
         <div class="product-info">
-          <span class="product-pet-tag">
-            {{#eq pet 'ambos'}}Ambos{{else}}{{#if pet_name}}{{pet_name}}{{else}}{{pet}}{{/if}}{{/eq}}
-          </span>
-          <span class="product-stock {{stockClass stock}}">{{stockLabel stock}}</span>
+          <span class="product-pet-tag">{{petLabel pet pet_name}}</span>
           <h3>{{name}}</h3>
           <p>{{description}}</p>
           <div class="product-footer">
@@ -404,8 +322,8 @@ setInterval(() => {
 
 
 <!-- ═══════════════════════════════════
-     ABOUT STRIP
-═══════════════════════════════════ -->
+  ABOUT STRIP
+  ═══════════════════════════════════ -->
 <section class="about-strip">
   <div class="container">
     <div class="about-strip-inner">

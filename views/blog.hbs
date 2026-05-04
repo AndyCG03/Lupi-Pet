@@ -1,11 +1,18 @@
 
 
+<section class="page-header">
+  <div class="container">
+    <h1>Blog</h1>
+    <p>{{blogPosts.length}} artículos</p>
+  </div>
+</section>
+
 <section class="section">
   <div class="container">
     {{#if blogPosts.length}}
-    <div class="blog-grid blog-grid-full">
+    <div class="blog-grid">
       {{#each blogPosts}}
-      <a href="/blog/{{id}}" target="_blank" class="blog-card blog-card-full blog-card-link">
+      <a href="/blog/{{id}}" class="blog-card">
         {{#if image}}
         <div class="blog-card-image">
           <img src="/uploads/{{image}}" alt="{{title}}">
@@ -15,7 +22,6 @@
           <div class="blog-meta">
             <span class="blog-category">{{category}}</span>
             <span class="blog-date">{{date}}</span>
-            <span class="blog-read-time">{{read_time}} de lectura</span>
           </div>
           <h2>{{title}}</h2>
           <p>{{excerpt}}</p>

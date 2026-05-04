@@ -90,7 +90,7 @@
             <td>{{category_name}}</td>
             <td>${{price}}</td>
             <td>{{#eq stock 'sin-stock'}}Sin stock{{else}}{{#eq stock 'pocos'}}Pocos{{else}}Muchos{{/eq}}{{/eq}}</td>
-            <td>{{#eq pet 'ambos'}}Ambos{{else}}{{pet_name}}{{/eq}}</td>
+            <td>{{#eq pet 'ambos'}}Ambos{{else}}{{#if pet_name}}{{pet_name}}{{else}}{{pet}}{{/if}}{{/eq}}</td>
             <td>{{#eq featured 1}}Si{{else}}No{{/eq}}</td>
             <td>
               <div class="bo-actions">
