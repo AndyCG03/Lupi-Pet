@@ -1,9 +1,4 @@
-<section class="page-hero page-hero-small">
-  <div class="container">
-    <h1>Tienda</h1>
-    <p>{{total}} productos disponibles para tu mascota</p>
-  </div>
-</section>
+<section class="section">
 
 <section class="section">
   <div class="container">
@@ -74,7 +69,8 @@
               {{/if}}
             </div>
             <div class="product-info">
-              <span class="product-pet">{{#eq pet 'ambos'}}Ambos{{else}}{{pet}}{{/eq}}</span>
+              <span class="product-pet">{{#eq pet 'ambos'}}Ambos{{else}}{{#if pet_name}}{{pet_name}}{{else}}{{pet}}{{/if}}{{/eq}}</span>
+              <span class="product-stock {{stockClass stock}}">{{stockLabel stock}}</span>
               <h3>{{name}}</h3>
               <p>{{description}}</p>
               <div class="product-footer">

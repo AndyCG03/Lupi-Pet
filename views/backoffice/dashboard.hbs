@@ -80,7 +80,7 @@
             <td>{{name}}</td>
             <td>{{category_name}}</td>
             <td>${{price}}</td>
-            <td>{{stock}}</td>
+            <td>{{#eq stock 'sin-stock'}}Sin stock{{else}}{{#eq stock 'pocos'}}Pocos{{else}}Muchos{{/eq}}{{/eq}}</td>
             <td>{{#if image}}<img src="/uploads/{{image}}">{{else}}<span style="color:#999">-</span>{{/if}}</td>
             <td>
               <div class="bo-actions">

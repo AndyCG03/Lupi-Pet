@@ -92,8 +92,12 @@
             <input type="number" name="price" value="{{product.price}}" step="0.01" placeholder="0.00" required>
           </div>
           <div class="bo-form-group">
-            <label>Stock (opcional)</label>
-            <input type="number" name="stock" value="{{product.stock}}" placeholder="Sin limite">
+            <label>Stock</label>
+            <select name="stock">
+              <option value="muchos" {{#eq product.stock 'muchos'}}selected{{/eq}}>Muchos</option>
+              <option value="pocos" {{#eq product.stock 'pocos'}}selected{{/eq}}>Pocos</option>
+              <option value="sin-stock" {{#eq product.stock 'sin-stock'}}selected{{/eq}}>Sin stock</option>
+            </select>
           </div>
         </div>
         <div class="bo-form-group">

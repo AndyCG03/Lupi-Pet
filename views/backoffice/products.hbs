@@ -38,6 +38,8 @@
     .form-group label { display: block; font-weight: 700; margin-bottom: 6px; }
     .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 2px solid #EDD9CA; border-radius: 8px; font-family: 'Baloo 2', cursive; font-size: 1rem; }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #EE5804; outline: none; }
+    .checkbox-label { display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; }
+    .checkbox-label input { width: 18px; height: 18px; accent-color: #EE5804; }
     .form-row { display: flex; gap: 12px; }
     .form-row .form-group { flex: 1; }
     @media (max-width: 767px) {
@@ -76,6 +78,7 @@
             <th>Precio</th>
             <th>Stock</th>
             <th>Para</th>
+            <th>Destacado</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -86,8 +89,9 @@
             <td>{{name}}</td>
             <td>{{category_name}}</td>
             <td>${{price}}</td>
-            <td>{{#if stock}}{{stock}}{{else}}Sin limite{{/if}}</td>
-            <td>{{#eq pet 'ambos'}}Ambos{{else}}{{pet}}{{/eq}}</td>
+            <td>{{#eq stock 'sin-stock'}}Sin stock{{else}}{{#eq stock 'pocos'}}Pocos{{else}}Muchos{{/eq}}{{/eq}}</td>
+            <td>{{#eq pet 'ambos'}}Ambos{{else}}{{pet_name}}{{/eq}}</td>
+            <td>{{#eq featured 1}}Si{{else}}No{{/eq}}</td>
             <td>
               <div class="bo-actions">
                 <a href="/backoffice/products/{{id}}/edit" class="bo-action-btn edit">Editar</a>
@@ -99,7 +103,7 @@
           </tr>
           {{else}}
           <tr>
-            <td colspan="7" style="text-align:center;padding:40px;">No hay productos</td>
+            <td colspan="8" style="text-align:center;padding:40px;">No hay productos</td>
           </tr>
           {{/each}}
         </tbody>
@@ -142,7 +146,11 @@
           </div>
           <div class="form-group">
             <label>Stock</label>
-            <input type="number" name="stock" placeholder="Sin limite">
+            <select name="stock">
+              <option value="muchos" {{#eq stock 'muchos'}}selected{{/eq}}>Muchos</option>
+              <option value="pocos" {{#eq stock 'pocos'}}selected{{/eq}}>Pocos</option>
+              <option value="sin-stock" {{#eq stock 'sin-stock'}}selected{{/eq}}>Sin stock</option>
+            </select>
           </div>
         </div>
         <div class="form-group">
@@ -152,6 +160,11 @@
         <div class="form-group">
           <label>Descripcion</label>
           <textarea name="description" rows="3" placeholder="Descripcion del producto"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" name="featured" value="1"> Producto destacado (aparece en home)
+          </label>
         </div>
         <button type="submit" class="bo-btn">Guardar</button>
       </form>

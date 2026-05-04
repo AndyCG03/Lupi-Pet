@@ -51,7 +51,7 @@ router.get('/backoffice/products', (req, res) => {
     return res.redirect('/backoffice/login');
   }
   const db = req.db.getDb();
-  const products = execToObjects(db, 'SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.id DESC');
+  const products = execToObjects(db, 'SELECT p.*, c.name as category_name, m.name as pet_name FROM products p LEFT JOIN categories c ON p.category_id = c.id LEFT JOIN pets m ON p.pet = m.slug ORDER BY p.id DESC');
   const categories = execToObjects(db, 'SELECT * FROM categories');
   const pets = execToObjects(db, 'SELECT * FROM pets');
   const allPets = execToObjects(db, 'SELECT * FROM pets');
@@ -76,13 +76,14 @@ router.post('/backoffice/products', (req, res, next) => {
     return res.redirect('/backoffice/login');
   }
   const { name, category_id, pet, price, description, stock, featured } = req.body;
-  const image = req.file ? req.file.filename : null;
+  const uploadedImage = req.file ? req.file.filename : null;
+  const stockVal = stock || 'muchos';
   const featuredVal = featured ? 1 : 0;
   req.db.runQuery(
     "INSERT INTO products (name, category_id, pet, price, image, description, stock, featured) VALUES ('" + 
     name.replace(/'/g, "''") + "', " + category_id + ", '" + pet + "', " + price + ", " + 
-    (image ? "'" + image.replace(/'/g, "''") + "'" : "null") + ", '" + 
-    (description || '').replace(/'/g, "''") + "', " + (stock || 0) + ", " + featuredVal + ")"
+    (uploadedImage ? "'" + uploadedImage.replace(/'/g, "''") + "'" : "null") + ", '" + 
+    (description || '').replace(/'/g, "''") + "', '" + stockVal + "', " + featuredVal + ")"
   );
   
   req.db.saveDb();
@@ -138,12 +139,12 @@ router.post('/backoffice/products/:id', (req, res, next) => {
   const { name, category_id, pet, price, description, stock, featured, existing_image } = req.body;
   const image = req.file ? req.file.filename : existing_image;
   const featuredVal = featured ? 1 : 0;
+  const stockVal = stock || 'muchos';
   const id = parseInt(req.params.id);
   req.db.runQuery(
     "UPDATE products SET name = '" + name.replace(/'/g, "''") + "', category_id = " + category_id + 
     ", pet = '" + pet + "', price = " + price + ", image = " + (image ? "'" + image.replace(/'/g, "''") + "'" : "null") + 
-    ", description = '" + (description || '').replace(/'/g, "''") + "', stock = " + (stock || 0) + 
-    ", featured = " + featuredVal + " WHERE id = " + id
+    ", description = '" + (description || '').replace(/'/g, "''") + "', stock = '" + stockVal + "', featured = " + featuredVal + " WHERE id = " + id
   );
   
   req.db.saveDb();

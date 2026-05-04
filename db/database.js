@@ -19,16 +19,15 @@ async function loadDb() {
   
   db = new SQL.Database(data);
   
-db.run(`
-    CREATE TABLE IF NOT EXISTS pets (
+  db.run(`
+    CREATE TABLE IF NOT EXISTS categories (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       slug TEXT UNIQUE NOT NULL,
+      pet TEXT DEFAULT 'ambos',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
-  
-  try { db.run("ALTER TABLE categories ADD COLUMN pet TEXT DEFAULT 'ambos'"); } catch(e) {}
   
   db.run(`
     CREATE TABLE IF NOT EXISTS products (
@@ -37,17 +36,16 @@ db.run(`
       category_id INTEGER NOT NULL,
       pet TEXT NOT NULL,
       price REAL NOT NULL,
-      emoji TEXT,
       image TEXT,
       badge TEXT,
       description TEXT,
-      stock INTEGER DEFAULT 0,
+      stock TEXT DEFAULT 'muchos',
       featured INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (category_id) REFERENCES categories(id)
     )
   `);
-  
+
   db.run(`
     CREATE TABLE IF NOT EXISTS blog_posts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

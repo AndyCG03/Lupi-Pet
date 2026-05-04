@@ -14,9 +14,10 @@ function execToObjects(db, query) {
 router.get('/', (req, res) => {
   const db = req.db.getDb();
   const products = execToObjects(db, `
-    SELECT p.*, c.name as category_name, c.emoji as category_emoji
+    SELECT p.*, c.name as category_name, m.name as pet_name
     FROM products p
     JOIN categories c ON p.category_id = c.id
+    LEFT JOIN pets m ON p.pet = m.slug
     WHERE p.featured = 1
   `);
   const blogPosts = execToObjects(db, 'SELECT * FROM blog_posts ORDER BY id DESC');
@@ -32,13 +33,14 @@ router.get('/', (req, res) => {
 router.get('/tienda', (req, res) => {
   const { categoria, mascota, q } = req.query;
   const db = req.db.getDb();
-
+  
   let products;
   if (categoria || mascota || q) {
     let query = `
-      SELECT p.*, c.name as category_name, c.emoji as category_emoji
+      SELECT p.*, c.name as category_name, m.name as pet_name
       FROM products p
       JOIN categories c ON p.category_id = c.id
+      LEFT JOIN pets m ON p.pet = m.slug
       WHERE 1=1
     `;
     if (categoria) query += ` AND c.slug = '${categoria}'`;
@@ -46,7 +48,7 @@ router.get('/tienda', (req, res) => {
     if (q) query += ` AND (p.name LIKE '%${q}%' OR p.description LIKE '%${q}%')`;
     products = execToObjects(db, query);
   } else {
-    products = execToObjects(db, 'SELECT p.*, c.name as category_name, c.emoji as category_emoji FROM products p JOIN categories c ON p.category_id = c.id');
+    products = execToObjects(db, 'SELECT p.*, c.name as category_name, m.name as pet_name FROM products p JOIN categories c ON p.category_id = c.id LEFT JOIN pets m ON p.pet = m.slug');
   }
 
   const categories = execToObjects(db, 'SELECT * FROM categories');
@@ -67,7 +69,7 @@ router.get('/tienda', (req, res) => {
 
 router.get('/producto/:id', (req, res) => {
   const db = req.db.getDb();
-  const products = execToObjects(db, `SELECT p.*, c.name as category_name, c.emoji as category_emoji FROM products p JOIN categories c ON p.category_id = c.id WHERE p.id = ${parseInt(req.params.id)}`);
+  const products = execToObjects(db, `SELECT p.*, c.name as category_name, m.name as pet_name FROM products p JOIN categories c ON p.category_id = c.id LEFT JOIN pets m ON p.pet = m.slug WHERE p.id = ${parseInt(req.params.id)}`);
   if (products.length === 0) {
     return res.redirect('/tienda');
   }
@@ -110,6 +112,13 @@ router.get('/contacto', (req, res) => {
   res.render('contacto', {
     title: 'Contacto — Lupi Pet',
     page: 'contacto'
+  });
+});
+
+router.get('/nosotros', (req, res) => {
+  res.render('nosotros', {
+    title: '¿Quiénes Somos? — Lupi Pet',
+    page: 'nosotros'
   });
 });
 

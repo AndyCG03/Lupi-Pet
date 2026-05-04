@@ -1,9 +1,3 @@
-<section class="page-hero page-hero-small">
-  <div class="container">
-    <h1>{{product.name}}</h1>
-  </div>
-</section>
-
 <section class="section">
   <div class="container">
     <div class="product-detail">
@@ -16,7 +10,7 @@
       </div>
       <div class="product-detail-info">
         {{#if product.badge}}<span class="product-badge">{{product.badge}}</span>{{/if}}
-        <span class="product-pet">{{#eq product.pet 'ambos'}}Para todos{{else}}Para {{product.pet}}{{/eq}}</span>
+        <span class="product-pet">{{#eq product.pet 'ambos'}}Para todos{{else}}Para {{#if product.pet_name}}{{product.pet_name}}{{else}}{{product.pet}}{{/if}}{{/eq}}</span>
         <h1>{{product.name}}</h1>
         <p class="product-detail-desc">{{product.description}}</p>
         <div class="product-detail-price">
@@ -24,10 +18,10 @@
           <span class="currency">MXN</span>
         </div>
         <div class="product-detail-stock">
-          {{#if product.stock}}
-          <span class="stock-available">En stock ({{product.stock}})</span>
+          {{#if (eq product.stock 'sin-stock')}}
+          <span class="stock-out">Sin stock</span>
           {{else}}
-          <span class="stock-available">Disponible</span>
+          <span class="stock-available">En stock</span>
           {{/if}}
         </div>
         <button class="btn-add-cart" onclick="addToCart({{product.id}}, '{{product.name}}', {{product.price}})">

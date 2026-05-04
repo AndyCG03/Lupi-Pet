@@ -47,6 +47,15 @@ app.engine('hbs', engine({
     ifEquals: (a, b) => a === b ? 'selected' : '',
     multiply: (a, b) => (a * b).toFixed(2),
     json: (ctx) => JSON.stringify(ctx),
+    stockLabel: (stock) => {
+      if (stock === 'sin-stock' || stock === false) return 'Sin stock';
+      if (stock === 'pocos') return 'Pocos';
+      return 'En stock';
+    },
+    stockClass: (stock) => {
+      if (stock === 'sin-stock' || stock === false) return 'out';
+      return 'in';
+    }
   }
 }));
 app.set('view engine', 'hbs');

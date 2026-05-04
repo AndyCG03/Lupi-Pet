@@ -1,0 +1,17 @@
+/* ── ABOUT / NOSOTROS ── */
+.about-content { max-width: 900px; margin: 0 auto; }
+.about-content h1 { font-size: 2rem; font-weight: 800; margin-bottom: 20px; color: #2D1A0E; text-align: center; }
+.about-intro { font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 32px; }
+.about-section { margin-bottom: 36px; }
+.about-section h2 { font-size: 1.4rem; font-weight: 800; color: #EE5804; margin-bottom: 16px; }
+.about-section p { font-size: 1rem; line-height: 1.7; color: #444; }
+.about-locations { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+.location-card { background: #fff; border: 2px solid #EDD9CA; border-radius: 12px; padding: 20px; }
+.location-card h3 { font-size: 1.1rem; font-weight: 700; color: #2D1A0E; margin-bottom: 10px; }
+.location-card p { font-size: 0.95rem; color: #555; margin-bottom: 8px; }
+.location-card .address { font-weight: 600; color: #EE5804; font-size: 0.9rem; }
+.about-list { list-style: none; padding: 0; margin: 16px 0; }
+.about-list li { padding: 10px 0; border-bottom: 1px solid #EDD9CA; color: #444; }
+.about-list li strong { color: #2D1A0E; }
+.about-contact { background: #2D1A0E; color: #fff; padding: 20px; border-radius: 12px; text-align: center; margin-top: 20px; }
+.about-contact p { font-size: 1.1rem; color: #fff; }
