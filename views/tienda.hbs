@@ -43,19 +43,19 @@
       <!-- Filtros mobile -->
       <div class="filters-mobile">
         <form action="/tienda" method="GET">
-          <select name="categoria" class="filter-select" onchange="this.form.submit()">
+          <input type="text" name="q" value="{{q}}" placeholder="Buscar..." class="filter-select">
+          <select name="categoria" class="filter-select" onchange="var url=this.value===''?'/tienda':(this.form.action+'?categoria='+this.value); if(this.value===''){window.location.href=url}else{this.form.submit()}">
             <option value="">Todas las categorias</option>
             {{#each categories}}
             <option value="{{slug}}" {{#if (eq ../categoria slug)}}selected{{/if}}>{{name}}</option>
             {{/each}}
           </select>
-          <select name="mascota" class="filter-select" onchange="this.form.submit()">
+          <select name="mascota" class="filter-select" onchange="var url=this.value===''?'/tienda':(this.form.action+'?mascota='+this.value); if(this.value===''){window.location.href=url}else{this.form.submit()}">
             <option value="">Todas las mascotas</option>
             {{#each pets}}
             <option value="{{slug}}" {{#if (eq ../mascota slug)}}selected{{/if}}>{{name}}</option>
             {{/each}}
           </select>
-          {{#if q}}<input type="hidden" name="q" value="{{q}}">{{/if}}
         </form>
       </div>
 

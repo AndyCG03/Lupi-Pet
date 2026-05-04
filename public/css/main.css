@@ -44,6 +44,16 @@ ul { list-style: none; }
 .page-header { padding: 20px 0 12px; text-align: center; }
 .page-header h1 { margin-bottom: 4px; }
 .page-header p { font-size: 0.9rem; color: var(--text-light); }
+@media (max-width: 600px) {
+  .page-header { padding: 12px 0 8px; }
+  .page-header h1 { margin-bottom: 2px; font-size: 1.5rem; }
+  .page-header p { font-size: 0.8rem; }
+  .section { padding: 16px 0; }
+  .filters-mobile { margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .filters-mobile .filter-select, .filters-mobile .filter-input { width: 100%; }
+  .filter-input { width: 100%; padding: 10px 14px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-family: 'Baloo 2', cursive; font-size: 0.9rem; background: var(--gray); outline: none; }
+  .filter-input:focus { border-color: var(--orange); }
+}
 .section-header {
   display: flex; align-items: baseline;
   justify-content: space-between; margin-bottom: 40px;
