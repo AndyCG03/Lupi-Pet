@@ -24,10 +24,12 @@ async function loadDb() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       slug TEXT UNIQUE NOT NULL,
-      emoji TEXT,
+      pet TEXT DEFAULT 'ambos',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+  
+  try { db.run("ALTER TABLE categories ADD COLUMN pet TEXT DEFAULT 'ambos'"); } catch(e) {}
   
   db.run(`
     CREATE TABLE IF NOT EXISTS products (
@@ -53,7 +55,6 @@ async function loadDb() {
       title TEXT NOT NULL,
       category TEXT NOT NULL,
       pet TEXT NOT NULL,
-      emoji TEXT,
       date TEXT NOT NULL,
       excerpt TEXT,
       content TEXT,
@@ -61,6 +62,8 @@ async function loadDb() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+  
+  try { db.run("ALTER TABLE blog_posts ADD COLUMN image TEXT"); } catch(e) {}
   
   db.run(`
     CREATE TABLE IF NOT EXISTS admin_user (
@@ -75,18 +78,29 @@ async function loadDb() {
   const catCount = catResult.length > 0 ? catResult[0].values[0][0] : 0;
   
   if (catCount === 0) {
-    db.run("INSERT INTO categories (name, slug, emoji) VALUES ('Alimentos', 'alimentos', '🥩')");
-    db.run("INSERT INTO categories (name, slug, emoji) VALUES ('Accesorios', 'accesorios', '🎾')");
-    db.run("INSERT INTO categories (name, slug, emoji) VALUES ('Higiene', 'higiene', '🧴')");
+    db.run("INSERT INTO categories (name, slug, pet) VALUES ('Alimentos', 'alimentos', 'ambos')");
+    db.run("INSERT INTO categories (name, slug, pet) VALUES ('Accesorios', 'accesorios', 'ambos')");
+    db.run("INSERT INTO categories (name, slug, pet) VALUES ('Higiene', 'higiene', 'ambos')");
   }
   
   const adminResult = db.exec('SELECT COUNT(*) as count FROM admin_user');
   const adminCount = adminResult.length > 0 ? adminResult[0].values[0][0] : 0;
   
   if (adminCount === 0) {
-    db.run('INSERT INTO admin_user (username, password_hash) VALUES (?, ?)', [ADMIN_USER, DEFAULT_PASSWORD_HASH]);
+    db.run("INSERT INTO admin_user (username, password_hash) VALUES ('" + ADMIN_USER + "', '" + DEFAULT_PASSWORD_HASH + "')");
     saveDb();
   }
+}
+
+function runQuery(query, params = []) {
+  if (params.length > 0) {
+    query = query.replace(/\?/g, () => {
+      const p = params.shift();
+      if (typeof p === 'string') return "'" + p.replace(/'/g, "''") + "'";
+      return p;
+    });
+  }
+  db.run(query);
 }
 
 function saveDb() {
@@ -124,8 +138,8 @@ function getAdminUser() {
 }
 
 function updatePassword(newHash) {
-  db.run('UPDATE admin_user SET password_hash = ? WHERE id = 1', [newHash]);
+  db.run('UPDATE admin_user SET password_hash = ' + newHash + ' WHERE id = 1');
   saveDb();
 }
 
-module.exports = { loadDb, saveDb, getDb, getPasswordHash, verifyPassword, getAdminUser, updatePassword };
+module.exports = { loadDb, saveDb, getDb, getPasswordHash, verifyPassword, getAdminUser, updatePassword, runQuery };

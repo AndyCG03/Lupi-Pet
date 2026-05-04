@@ -26,6 +26,14 @@ app.use(session({
 app.use((req, res, next) => {
   req.db = require('./db/database');
   req.upload = upload;
+  const reqPath = req.path;
+  if (reqPath.startsWith('/backoffice') && !reqPath.includes('/login')) {
+    if (reqPath === '/backoffice' || reqPath === '/backoffice/') res.locals.page = 'dashboard';
+    else if (reqPath.includes('/products')) res.locals.page = 'products';
+    else if (reqPath.includes('/categories')) res.locals.page = 'categories';
+    else if (reqPath.includes('/blog')) res.locals.page = 'blog';
+    else if (reqPath.includes('/password')) res.locals.page = 'password';
+  }
   next();
 });
 
@@ -36,6 +44,7 @@ app.engine('hbs', engine({
   partialsDir: path.join(__dirname, 'views/partials'),
   helpers: {
     eq: (a, b) => a === b,
+    ifEquals: (a, b) => a === b ? 'selected' : '',
     multiply: (a, b) => (a * b).toFixed(2),
     json: (ctx) => JSON.stringify(ctx),
   }

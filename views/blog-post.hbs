@@ -1,0 +1,24 @@
+<section class="page-hero page-hero-small">
+  <div class="container">
+    <h1>{{post.title}}</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <article class="blog-post-full">
+      {{#if post.image}}
+      <img src="/uploads/{{post.image}}" alt="{{post.title}}" class="blog-post-image">
+      {{/if}}
+      <div class="blog-post-meta">
+        <span class="blog-category">{{post.category}}</span>
+        <span class="blog-date">{{post.date}}</span>
+        <span class="blog-read-time">{{post.read_time}} de lectura</span>
+      </div>
+      <div class="blog-post-content">
+        {{post.content}}
+      </div>
+      <a href="/blog" class="btn-outline" style="margin-top:24px;">Volver al blog</a>
+    </article>
+  </div>
+</section>

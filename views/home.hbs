@@ -20,11 +20,11 @@
     <div class="hero-blob"></div>
     <div class="hero-animal">
       <div class="animal-card">
-        <span class="animal-big">Dog</span>
+        <span class="animal-big">🐶</span>
         <div class="animal-bubble">Hola!</div>
       </div>
       <div class="animal-card animal-card-2">
-        <span class="animal-big">Cat</span>
+        <span class="animal-big">🐱</span>
         <div class="animal-bubble animal-bubble-2">Miau</div>
       </div>
     </div>
@@ -83,7 +83,7 @@
           {{#if image}}
           <img src="/uploads/{{image}}" alt="{{name}}">
           {{else}}
-          <div class="product-emoji">{{emoji}}</div>
+          <div class="product-emoji">Imagen no disponible</div>
           {{/if}}
         </div>
         <div class="product-info">
@@ -105,6 +105,7 @@
 
 <!-- BANNER CTA -->
 <section class="cta-banner">
+  <span class="cta-emoji cta-emoji-left">🐶</span>
   <div class="cta-inner">
     <div class="cta-text">
       <h2>No encuentras lo que buscas?</h2>
@@ -115,6 +116,7 @@
       </a>
     </div>
   </div>
+  <span class="cta-emoji cta-emoji-right">🐱</span>
 </section>
 
 <!-- BLOG PREVIEW -->
@@ -126,15 +128,19 @@
     </div>
     <div class="blog-grid">
       {{#each blogPosts}}
-      <article class="blog-card">
+      <a href="/blog/{{id}}" target="_blank" class="blog-card blog-card-link">
+        {{#if image}}
+        <div class="blog-card-image">
+          <img src="/uploads/{{image}}" alt="{{title}}">
+        </div>
+        {{/if}}
         <div class="blog-meta">
           <span class="blog-category">{{category}}</span>
           <span class="blog-date">{{date}}</span>
         </div>
         <h3>{{title}}</h3>
         <p>{{excerpt}}</p>
-        <a href="/blog" class="blog-read">Leer articulo ({{readTime}}) --></a>
-      </article>
+      </a>
       {{/each}}
     </div>
   </div>

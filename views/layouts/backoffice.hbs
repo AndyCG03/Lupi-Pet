@@ -21,85 +21,37 @@
     .bo-header h1 { font-size: 1.8rem; font-weight: 800; margin: 0; }
     .bo-btn { background: var(--orange); color: var(--white); padding: 10px 20px; border-radius: 50px; font-weight: 700; display: inline-block; text-decoration: none; transition: all .2s; }
     .bo-btn:hover { background: var(--orange-dark); }
+    .bo-btn-gray { background: var(--gray); color: var(--text); }
     .bo-toggle { display: none; background: var(--text); color: var(--white); padding: 12px 16px; border: none; cursor: pointer; position: fixed; top: 0; left: 0; z-index: 100; }
-    .bo-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
-    .bo-stat { background: var(--white); border-radius: 10px; padding: 20px; border: 2px solid var(--border); text-align: center; }
-    .bo-stat strong { display: block; font-size: 1.8rem; color: var(--orange); }
-    .bo-stat span { font-size: 0.85rem; color: var(--text-light); }
     .bo-table { width: 100%; background: var(--white); border-radius: 12px; overflow: hidden; border: 2px solid var(--border); }
     .bo-table th, .bo-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
     .bo-table th { background: var(--gray); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
     .bo-table tr:hover { background: var(--gray); }
-    .bo-table img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
     .bo-actions { display: flex; gap: 6px; flex-wrap: wrap; }
     .bo-action-btn { padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: none; border: none; }
     .bo-action-btn.edit { background: var(--orange-pale); color: var(--orange); }
     .bo-action-btn.delete { background: #fee2e2; color: #dc2626; }
-    .bo-empty { text-align: center; padding: 60px; color: var(--text-light); }
     @media (max-width: 767px) {
       .bo-sidebar { display: none; }
       .bo-sidebar.show { display: block; }
       .bo-main { margin-left: 0; padding: 20px 16px; }
       .bo-toggle { display: block; }
-      .bo-stats { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
   <button class="bo-toggle" onclick="document.querySelector('.bo-sidebar').classList.toggle('show')">☰ Menu</button>
   <div class="bo-layout">
-    {{> backoffice-sidebar}}
+    <aside class="bo-sidebar">
+      <h2>Backoffice</h2>
+      <a href="/backoffice" {{#eq page 'dashboard'}}class="active"{{/eq}}>Dashboard</a>
+      <a href="/backoffice/categories" {{#eq page 'categories'}}class="active"{{/eq}}>Categorias</a>
+      <a href="/backoffice/blog" {{#eq page 'blog'}}class="active"{{/eq}}>Blog</a>
+      <a href="/backoffice/password">Password</a>
+      <a href="/backoffice/logout" onclick="return confirm('Cerrar sesion?')">Salir</a>
+    </aside>
     <main class="bo-main">
-      <div class="bo-header">
-        <h1>Gestion de Productos</h1>
-        <a href="/backoffice/products/new" class="bo-btn">+ Nuevo Producto</a>
-      </div>
-      <div class="bo-stats">
-        <div class="bo-stat"><strong>{{productCount}}</strong><span>Productos</span></div>
-        <div class="bo-stat"><strong>{{categoryCount}}</strong><span>Categorias</span></div>
-        <div class="bo-stat"><strong>{{blogCount}}</strong><span>Blog</span></div>
-        <div class="bo-stat" style="background:{{#if lowStock}}#fee2e2{{else}}#e8f5e9{{/if}}"><strong>{{lowStock}}</strong><span>Stock bajo</span></div>
-      </div>
-      {{#if products.length}}
-      <table class="bo-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Categoria</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Imagen</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each products}}
-          <tr>
-            <td>{{id}}</td>
-            <td>{{name}}</td>
-            <td>{{category_name}}</td>
-            <td>${{price}}</td>
-            <td>{{stock}}</td>
-            <td>{{#if image}}<img src="/uploads/{{image}}">{{else}}<span style="color:#999">-</span>{{/if}}</td>
-            <td>
-              <div class="bo-actions">
-                <a href="/backoffice/products/{{id}}/edit" class="bo-action-btn edit">Editar</a>
-                <form action="/backoffice/products/{{id}}/delete" method="POST" style="display:inline">
-                  <button type="submit" class="bo-action-btn delete" onclick="return confirm('Eliminar?')">X</button>
-                </form>
-              </div>
-            </td>
-          </tr>
-          {{/each}}
-        </tbody>
-      </table>
-      {{else}}
-      <div class="bo-empty">
-        <p>No hay productos aun.</p>
-        <a href="/backoffice/products/new" class="bo-btn">+ Agregar Producto</a>
-      </div>
-      {{/if}}
+      {{{body}}}
     </main>
   </div>
 </body>

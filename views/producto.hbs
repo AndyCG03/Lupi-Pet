@@ -11,7 +11,7 @@
         {{#if product.image}}
         <img src="/uploads/{{product.image}}" alt="{{product.name}}">
         {{else}}
-        <div class="product-emoji-large">{{product.emoji}}</div>
+        <div class="product-emoji-large">Imagen no disponible</div>
         {{/if}}
       </div>
       <div class="product-detail-info">
@@ -30,7 +30,7 @@
           <span class="stock-out">Sin stock</span>
           {{/if}}
         </div>
-        <button class="btn-add-cart" onclick="addToCart({{product.id}}, '{{product.name}}', {{product.price}}, '{{product.emoji}}')">
+        <button class="btn-add-cart" onclick="addToCart({{product.id}}, '{{product.name}}', {{product.price}})">
           + Agregar al carrito
         </button>
         <a href="/tienda" class="btn-outline">Volver a la tienda</a>
@@ -48,7 +48,7 @@
             {{#if image}}
             <img src="/uploads/{{image}}" alt="{{name}}">
             {{else}}
-            <div class="product-emoji">{{emoji}}</div>
+            <div class="product-emoji">Imagen no disponible</div>
             {{/if}}
           </div>
           <div class="product-info">

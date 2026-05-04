@@ -90,6 +90,20 @@ router.get('/blog', (req, res) => {
   });
 });
 
+router.get('/blog/:id', (req, res) => {
+  const db = req.db.getDb();
+  const posts = execToObjects(db, 'SELECT * FROM blog_posts WHERE id = ' + parseInt(req.params.id));
+  if (posts.length === 0) {
+    return res.redirect('/blog');
+  }
+  const post = posts[0];
+  res.render('blog-post', {
+    title: post.title + ' — Blog Lupi Pet',
+    post,
+    page: 'blog'
+  });
+});
+
 router.get('/contacto', (req, res) => {
   res.render('contacto', {
     title: 'Contacto — Lupi Pet',

@@ -7,43 +7,52 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/main.css">
   <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Baloo 2', cursive; background: #FDF6F0; }
     .bo-layout { display: flex; min-height: 100vh; }
-    .bo-sidebar { width: 240px; background: var(--text); color: var(--white); padding: 24px; flex-shrink: 0; }
-    .bo-sidebar h2 { color: var(--orange); margin-bottom: 32px; font-size: 1.3rem; }
-    .bo-sidebar nav { display: flex; flex-direction: column; gap: 8px; }
-    .bo-sidebar a { color: rgba(255,255,255,.7); padding: 12px 16px; border-radius: 8px; transition: all .2s; }
-    .bo-sidebar a:hover, .bo-sidebar a.active { background: rgba(255,255,255,.1); color: var(--white); }
-    .bo-main { flex: 1; padding: 32px; background: var(--cream); }
-    .bo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
-    .bo-header h1 { font-size: 1.8rem; font-weight: 800; }
-    .bo-btn { background: var(--orange); color: var(--white); padding: 10px 20px; border-radius: 50px; font-weight: 700; display: inline-block; }
-    .bo-btn:hover { background: var(--orange-dark); }
-    .bo-table { width: 100%; background: var(--white); border-radius: var(--radius); overflow: hidden; border: 2px solid var(--border); }
-    .bo-table th, .bo-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
-    .bo-table th { background: var(--gray); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; }
-    .bo-table tr:hover { background: var(--gray); }
-    .bo-actions { display: flex; gap: 8px; }
-    .bo-action-btn { padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
-    .bo-edit { background: var(--orange-pale); color: var(--orange); border: none; }
-    .bo-delete { background: #fee2e2; color: #dc2626; border: none; }
+    .bo-sidebar { width: 240px; background: #2D1A0E; color: #fff; padding: 24px; flex-shrink: 0; position: fixed; height: 100vh; left: 0; top: 0; overflow-y: auto; }
+    .bo-sidebar h2 { color: #EE5804; margin: 0 0 24px 0; font-size: 1.3rem; }
+    .bo-sidebar a { display: block; color: rgba(255,255,255,.7); padding: 12px 16px; border-radius: 8px; transition: all .2s; margin-bottom: 4px; text-decoration: none; }
+    .bo-sidebar a:hover, .bo-sidebar a.active { background: rgba(255,255,255,.1); color: #fff; }
+    .bo-main { flex: 1; margin-left: 240px; padding: 32px; background: #FDF6F0; min-height: 100vh; width: calc(100% - 240px); }
+    .bo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
+    .bo-header h1 { font-size: 1.8rem; font-weight: 800; margin: 0; }
+    .bo-btn { background: #EE5804; color: #fff; padding: 10px 20px; border-radius: 50px; font-weight: 700; display: inline-block; text-decoration: none; transition: all .2s; border: none; cursor: pointer; font-family: 'Baloo 2', cursive; }
+    .bo-btn:hover { background: #C44500; }
+    .bo-toggle { display: none; background: #2D1A0E; color: #fff; padding: 12px 16px; border: none; cursor: pointer; position: fixed; top: 0; left: 0; z-index: 100; }
+    .bo-table { width: 100%; background: #fff; border-radius: 12px; overflow: hidden; border: 2px solid #EDD9CA; }
+    .bo-table th, .bo-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #EDD9CA; }
+    .bo-table th { background: #E8DFD4; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
+    .bo-table tr:hover { background: #FDF6F0; }
+    .bo-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .bo-action-btn { padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: none; border: none; }
+    .bo-action-btn.edit { background: #FEE4D6; color: #EE5804; }
+    .bo-action-btn.delete { background: #fee2e2; color: #dc2626; }
+    @media (max-width: 767px) {
+      .bo-sidebar { display: none; }
+      .bo-sidebar.show { display: block; }
+      .bo-main { margin-left: 0; padding: 20px 16px; width: 100%; }
+      .bo-toggle { display: block; }
+      .bo-table { display: block; overflow-x: auto; }
+    }
   </style>
 </head>
 <body>
+  <button class="bo-toggle" onclick="document.querySelector('.bo-sidebar').classList.toggle('show')">☰ Menu</button>
   <div class="bo-layout">
     <aside class="bo-sidebar">
-      <h2>🐾 Backoffice</h2>
-      <nav>
-        <a href="/backoffice">Dashboard</a>
-        <a href="/backoffice/categories" class="active">Categorias</a>
-        <a href="/backoffice/blog">Blog</a>
-        <a href="/backoffice/logout">Salir</a>
-      </nav>
+      <h2>Backoffice</h2>
+      <a href="/backoffice/products" {{#eq page 'products'}}class="active"{{/eq}}>Productos</a>
+      <a href="/backoffice/categories" {{#eq page 'categories'}}class="active"{{/eq}}>Categorias</a>
+      <a href="/backoffice/blog" {{#eq page 'blog'}}class="active"{{/eq}}>Blog</a>
+      <a href="/backoffice/password" {{#eq page 'password'}}class="active"{{/eq}}>Password</a>
+      <a href="/backoffice/logout" onclick="return confirm('Cerrar sesion?')">Salir</a>
     </aside>
     <main class="bo-main">
       <div class="bo-header">
-        <h1>Gestion de Categorias</h1>
+        <h1>Categorias</h1>
+        <a href="/backoffice/categories/new" class="bo-btn">+ Nueva Categoria</a>
       </div>
       <table class="bo-table">
         <thead>
@@ -51,7 +60,7 @@
             <th>ID</th>
             <th>Nombre</th>
             <th>Slug</th>
-            <th>Emoji</th>
+            <th>Para</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -61,12 +70,12 @@
             <td>{{id}}</td>
             <td>{{name}}</td>
             <td>{{slug}}</td>
-            <td>{{emoji}}</td>
+            <td>{{#eq pet 'perro'}}Perro{{else}}{{#eq pet 'gato'}}Gato{{else}}Ambos{{/eq}}{{/eq}}</td>
             <td>
               <div class="bo-actions">
-                <a href="/backoffice/categories/{{id}}/edit" class="bo-action-btn bo-edit">Editar</a>
+                <a href="/backoffice/categories/{{id}}/edit" class="bo-action-btn edit">Editar</a>
                 <form action="/backoffice/categories/{{id}}/delete" method="POST" style="display:inline">
-                  <button type="submit" class="bo-action-btn bo-delete" onclick="return confirm('Eliminar categoria?')">Eliminar</button>
+                  <button type="submit" class="bo-action-btn delete" onclick="return confirm('Eliminar?')">X</button>
                 </form>
               </div>
             </td>

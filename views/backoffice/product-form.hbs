@@ -7,110 +7,142 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/main.css">
   <style>
-    .bo-layout { display: flex; min-height: 100vh; }
-    .bo-sidebar { width: 240px; background: var(--text); color: var(--white); padding: 24px; flex-shrink: 0; }
-    .bo-sidebar h2 { color: var(--orange); margin-bottom: 32px; font-size: 1.3rem; }
-    .bo-sidebar nav { display: flex; flex-direction: column; gap: 8px; }
-    .bo-sidebar a { color: rgba(255,255,255,.7); padding: 12px 16px; border-radius: 8px; transition: all .2s; }
-    .bo-sidebar a:hover, .bo-sidebar a.active { background: rgba(255,255,255,.1); color: var(--white); }
-    .bo-main { flex: 1; padding: 32px; background: var(--cream); }
-    .bo-form { background: var(--white); padding: 32px; border-radius: var(--radius); border: 2px solid var(--border); max-width: 600px; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Baloo 2', cursive; background: #FDF6F0; }
+    .bo-layout { display: flex; justify-content: center; padding: 40px 20px; min-height: 100vh; }
+    .bo-form { background: #fff; padding: 32px; border-radius: 12px; border: 2px solid #EDD9CA; width: 100%; max-width: 600px; }
     .bo-form h1 { font-size: 1.5rem; margin-bottom: 24px; }
     .bo-form-group { margin-bottom: 20px; }
     .bo-form-group label { display: block; font-weight: 700; margin-bottom: 8px; }
-    .bo-form-group input, .bo-form-group select, .bo-form-group textarea { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-family: 'Baloo 2', cursive; font-size: 1rem; }
-    .bo-form-group input:focus, .bo-form-group select:focus, .bo-form-group textarea:focus { border-color: var(--orange); outline: none; }
+    .bo-form-group input, .bo-form-group select, .bo-form-group textarea { 
+      width: 100%; padding: 12px 16px; border: 2px solid #EDD9CA; border-radius: 8px; 
+      font-family: 'Baloo 2', cursive; font-size: 1rem; box-sizing: border-box; 
+    }
+    .bo-form-group input:focus, .bo-form-group select:focus, .bo-form-group textarea:focus { border-color: #EE5804; outline: none; }
     .bo-form-group textarea { min-height: 100px; resize: vertical; }
     .bo-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .bo-btn { background: var(--orange); color: var(--white); padding: 12px 24px; border-radius: 50px; font-weight: 700; display: inline-block; border: none; cursor: pointer; }
-    .bo-btn:hover { background: var(--orange-dark); }
-    .bo-btn-secondary { background: var(--gray); color: var(--text); }
-    img.preview { width: 100px; height: 100px; object-fit: cover; border-radius: var(--radius-sm); margin-top: 8px; }
+    .bo-btn { background: #EE5804; color: #fff; padding: 12px 24px; border-radius: 50px; font-weight: 700; display: inline-block; border: none; cursor: pointer; text-decoration: none; font-family: 'Baloo 2', cursive; }
+    .bo-btn:hover { background: #C44500; }
+    .bo-btn-secondary { background: #E8DFD4; color: #2D1A0E; }
+    img.preview { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; margin-top: 8px; display: block; }
+    .featured-box {
+      display: flex; align-items: center; gap: 14px;
+      background: #f5f5f5; padding: 14px 18px; border-radius: 10px;
+      border: 2px solid transparent; transition: all .2s; cursor: pointer;
+    }
+    .featured-box:hover { border-color: #ddd; }
+    .featured-box.active { background: #fff3e0; border-color: #EE5804; }
+    .featured-checkbox { 
+      width: 22px; height: 22px; accent-color: #EE5804; cursor: pointer; 
+    }
+    .featured-label { font-weight: 600; cursor: pointer; flex: 1; }
+    .featured-desc { display: block; font-size: 0.8rem; color: #888; font-weight: 400; margin-top: 2px; }
+    .image-preview-container { margin-top: 12px; }
+    .image-preview { 
+      width: 150px; height: 150px; object-fit: cover; border-radius: 10px; 
+      border: 2px dashed #EDD9CA; display: none; 
+    }
+    .image-preview.has-image { display: block; border-style: solid; }
+    .image-placeholder {
+      width: 150px; height: 150px; background: #E8DFD4; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: #666; font-size: 0.85rem;
+    }
+    @media (max-width: 600px) {
+      .bo-form-row { grid-template-columns: 1fr; }
+      .bo-form { padding: 20px; }
+    }
   </style>
 </head>
 <body>
   <div class="bo-layout">
-    <aside class="bo-sidebar">
-      <h2>🐾 Backoffice</h2>
-      <nav>
-        <a href="/backoffice">Dashboard</a>
-        <a href="/backoffice/categories">Categorias</a>
-        <a href="/backoffice/blog">Blog</a>
-        <a href="/backoffice/logout">Salir</a>
-      </nav>
-    </aside>
-    <main class="bo-main">
-      <div class="bo-form">
-        <h1>{{#if product.id}}Editar{{else}}Nuevo{{/if}} Producto</h1>
-        <form action="{{#if product.id}}/backoffice/products/{{product.id}}{{else}}/backoffice/products{{/if}}" method="POST" enctype="multipart/form-data">
-          {{#if product.id}}
-          <input type="hidden" name="existing_image" value="{{product.image}}">
-          {{/if}}
+    <div class="bo-form">
+      <h1>{{#if product.id}}Editar{{else}}Nuevo{{/if}} Producto</h1>
+      <form action="{{#if product.id}}/backoffice/products/{{product.id}}{{else}}/backoffice/products{{/if}}" method="POST" enctype="multipart/form-data" id="productForm">
+        {{#if product.id}}
+        <input type="hidden" name="existing_image" value="{{product.image}}">
+        {{/if}}
+        <div class="bo-form-group">
+          <label>Nombre del producto</label>
+          <input type="text" name="name" value="{{product.name}}" placeholder="Ej: Alimento premium para perros" required>
+        </div>
+        <div class="bo-form-row">
           <div class="bo-form-group">
-            <label>Nombre</label>
-            <input type="text" name="name" value="{{product.name}}" required>
-          </div>
-          <div class="bo-form-row">
-            <div class="bo-form-group">
-              <label>Categoria</label>
-              <select name="category_id" required>
-                {{#each categories}}
-                <option value="{{id}}" {{#eq id ../product.category_id}}selected{{/eq}}>{{name}}</option>
-                {{/each}}
-              </select>
-            </div>
-            <div class="bo-form-group">
-              <label>Para</label>
-              <select name="pet" required>
-                <option value="perro" {{#eq product.pet 'perro'}}selected{{/eq}}>Perro</option>
-                <option value="gato" {{#eq product.pet 'gato'}}selected{{/eq}}>Gato</option>
-                <option value="ambos" {{#eq product.pet 'ambos'}}selected{{/eq}}>Ambos</option>
-              </select>
-            </div>
-          </div>
-          <div class="bo-form-row">
-            <div class="bo-form-group">
-              <label>Precio (MXN)</label>
-              <input type="number" name="price" value="{{product.price}}" step="0.01" required>
-            </div>
-            <div class="bo-form-group">
-              <label>Stock</label>
-              <input type="number" name="stock" value="{{product.stock}}" required>
-            </div>
-          </div>
-          <div class="bo-form-row">
-            <div class="bo-form-group">
-              <label>Emoji (icono)</label>
-              <input type="text" name="emoji" value="{{product.emoji}}">
-            </div>
-            <div class="bo-form-group">
-              <label>Badge</label>
-              <input type="text" name="badge" value="{{product.badge}}">
-            </div>
+            <label>Categoria</label>
+            <select name="category_id" required>
+              {{#each categories}}
+              <option value="{{id}}" {{#eq id ../product.category_id}}selected{{/eq}}>{{name}}</option>
+              {{/each}}
+            </select>
           </div>
           <div class="bo-form-group">
-            <label>Imagen</label>
-            <input type="file" name="image" accept="image/*">
+            <label>Para</label>
+            <select name="pet" required>
+              <option value="perro" {{#eq product.pet 'perro'}}selected{{/eq}}>Perro</option>
+              <option value="gato" {{#eq product.pet 'gato'}}selected{{/eq}}>Gato</option>
+              <option value="ambos" {{#eq product.pet 'ambos'}}selected{{/eq}}>Ambos</option>
+            </select>
+          </div>
+        </div>
+        <div class="bo-form-row">
+          <div class="bo-form-group">
+            <label>Precio (MXN)</label>
+            <input type="number" name="price" value="{{product.price}}" step="0.01" placeholder="0.00" required>
+          </div>
+          <div class="bo-form-group">
+            <label>Stock (opcional)</label>
+            <input type="number" name="stock" value="{{product.stock}}" placeholder="Sin limite">
+          </div>
+        </div>
+        <div class="bo-form-group">
+          <label>Imagen del producto</label>
+          <input type="file" name="image" accept="image/*" id="imageInput">
+          <div class="image-preview-container">
             {{#if product.image}}
-            <img src="/uploads/{{product.image}}" class="preview">
+            <img src="/uploads/{{product.image}}" class="image-preview has-image" id="imagePreview">
+            {{else}}
+            <div class="image-placeholder" id="imagePlaceholder">Sin imagen</div>
+            <img src="" class="image-preview" id="imagePreview">
             {{/if}}
           </div>
-          <div class="bo-form-group">
-            <label>Descripcion</label>
-            <textarea name="description">{{product.description}}</textarea>
+        </div>
+        <div class="bo-form-group">
+          <label>Descripcion</label>
+          <textarea name="description" placeholder="Describe las caracteristicas del producto...">{{product.description}}</textarea>
+        </div>
+        <div class="bo-form-group">
+          <div class="featured-box {{#if product.featured}}active{{/if}}" id="featuredBox" onclick="document.getElementById('featured').click()">
+            <input type="checkbox" name="featured" value="1" {{#if product.featured}}checked{{/if}} class="featured-checkbox" id="featured" onchange="toggleFeatured()">
+            <div>
+              <div class="featured-label">Producto destacado</div>
+              <span class="featured-desc">Aparecera en la pagina principal</span>
+            </div>
           </div>
-          <div class="bo-form-group">
-            <label>
-              <input type="checkbox" name="featured" value="1" {{#if product.featured}}checked{{/if}}> Producto destacado
-            </label>
-          </div>
-          <button type="submit" class="bo-btn">Guardar</button>
-          <a href="/backoffice" class="bo-btn bo-btn-secondary">Cancelar</a>
-        </form>
-      </div>
-    </main>
+        </div>
+        <button type="submit" class="bo-btn">Guardar producto</button>
+        <a href="/backoffice/products" class="bo-btn bo-btn-secondary">Cancelar</a>
+      </form>
+    </div>
   </div>
+  <script>
+    function toggleFeatured() {
+      document.getElementById('featuredBox').classList.toggle('active');
+    }
+    document.getElementById('imageInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('imagePreview');
+      const placeholder = document.getElementById('imagePlaceholder');
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.classList.add('has-image');
+          if (placeholder) placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
 </body>
 </html>

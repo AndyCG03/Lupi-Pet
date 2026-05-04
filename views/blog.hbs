@@ -1,44 +1,38 @@
 <section class="page-hero page-hero-small">
   <div class="container">
-    <h1>📝 Blog</h1>
+    <h1>Blog</h1>
     <p>Consejos, cuidados y todo sobre el mundo de las mascotas</p>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
+    {{#if blogPosts.length}}
     <div class="blog-grid blog-grid-full">
       {{#each blogPosts}}
-      <article class="blog-card blog-card-full">
-        <div class="blog-emoji-lg">{{emoji}}</div>
+      <a href="/blog/{{id}}" target="_blank" class="blog-card blog-card-full blog-card-link">
+        {{#if image}}
+        <div class="blog-card-image">
+          <img src="/uploads/{{image}}" alt="{{title}}">
+        </div>
+        {{/if}}
         <div class="blog-content">
           <div class="blog-meta">
             <span class="blog-category">{{category}}</span>
-            <span class="blog-date">📅 {{date}}</span>
-            <span class="blog-read-time">⏱ {{readTime}} de lectura</span>
+            <span class="blog-date">{{date}}</span>
+            <span class="blog-read-time">{{read_time}} de lectura</span>
           </div>
           <h2>{{title}}</h2>
           <p>{{excerpt}}</p>
-          <button class="btn-blog-read" onclick="alert('¡Próximamente! Artículo completo en desarrollo.')">
-            Leer artículo completo →
-          </button>
         </div>
-      </article>
+      </a>
       {{/each}}
     </div>
-
-    <div class="blog-newsletter">
-      <div class="newsletter-inner">
-        <span>📬</span>
-        <div>
-          <h3>Suscríbete a nuestro newsletter</h3>
-          <p>Recibe consejos, ofertas y novedades directamente en tu correo.</p>
-        </div>
-        <div class="newsletter-form">
-          <input type="email" placeholder="Tu correo electrónico" class="newsletter-input">
-          <button class="btn-primary" onclick="alert('¡Gracias! Te avisaremos pronto 🐾')">Suscribirme</button>
-        </div>
-      </div>
+    {{else}}
+    <div class="empty-state">
+      <h3>Sin publicaciones</h3>
+      <p>Aun no hay articulos en el blog. Vuelve pronto!</p>
     </div>
+    {{/if}}
   </div>
 </section>
